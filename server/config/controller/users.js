@@ -1,26 +1,30 @@
+import bcrypt from 'bcrypt-nodejs';
+
 import db from '../../models/';
+
+
 
 const userAttributes = (user) => {
   const attributes = {
     id: user.id,
-    username: user.username,
+    userName: user.userName,
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
     roleId: user.roleId,
     createdAt: user.createdAt,
-    updatedAt: user.updatedAt
+    updatedAt: user.updatedAtg
   };
 
   return attributes;
 };
 const users = {
-    /**
-  * Get all users
-  * @param {Object} req Request object
-  * @param {Object} res Response object
-  * @returns {Object} - Returns response object
-  */
+  /**
+* Get all usersr
+* @param {Object} req Request object
+* @param {Object} res Response object
+* @returns {Object} - Returns response object
+*/
   findAll(req, res) {
     db.User.findAll({
       attributes: [
@@ -38,6 +42,7 @@ const users = {
     });
   },
   create(req, res) {
+    const password = bcrypt.hashSync(req.body.password);
     db.User.findOne({
       where: {
         email: req.body.email
@@ -48,13 +53,13 @@ const users = {
           message: `User with ${req.body.email} already exists`
         });
       }
-      db.user.create({
-        username: req.body.username,
+      db.User.create({
+        userName: req.body.userName,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password,
-        RoleId: req.body.RoleId
+        password,
+        roleId: req.body.roleId
       }).then((user) => {
         // const jwtData = {
         //   username: user.username,
