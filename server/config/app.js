@@ -5,7 +5,7 @@
 import express from 'express';
 
 import routes from './routes';
-
+import authenticate from './middlewares/authentication';
 import users from './controller/users';
 // const express = require('express');
 const logger = require('morgan');
@@ -31,6 +31,6 @@ app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));
 // app.get('/users', users.findAll);
-routes(router);
+routes(router, authenticate);
 
 module.exports = app;
