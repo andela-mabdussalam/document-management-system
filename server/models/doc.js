@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-  const Doc = sequelize.define('Doc', {
+  const Documents = sequelize.define('Documents', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    OwnerId: {
+    ownerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -30,18 +30,22 @@ module.exports = (sequelize, DataTypes) => {
     },
     access: {
       type: DataTypes.STRING,
-      defaultValue: 'public'
+      defaultValue: 'public',
+      allowNull: false,
+      validate: {
+        isIn: [['private', 'public', 'role']]
+      }
     }
   },
     {
       classMethods: {
         associate: (models) => {
-          Doc.belongsTo(models.User, {
+          Documents.belongsTo(models.Users, {
             foreignKey: 'ownerId',
             onDelete: 'CASCADE',
           });
         }
       }
     });
-  return Doc;
+  return Documents;
 };
