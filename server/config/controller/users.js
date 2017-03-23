@@ -1,26 +1,31 @@
+import bcrypt from 'bcrypt-nodejs';
+
 import db from '../../models/';
 
+import jwt from 'jsonwebtoken';
+
+const secret = process.env.JWT_SECRET_KEY || 'jhebefuehf7yu3832978ry09iofe';
 const userAttributes = (user) => {
   const attributes = {
     id: user.id,
-    username: user.username,
+    userName: user.userName,
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
     roleId: user.roleId,
     createdAt: user.createdAt,
-    updatedAt: user.updatedAt
+    updatedAt: user.updatedAtg
   };
 
   return attributes;
 };
 const users = {
-    /**
-  * Get all users
-  * @param {Object} req Request object
-  * @param {Object} res Response object
-  * @returns {Object} - Returns response object
-  */
+  /**
+* Get all usersr
+* @param {Object} req Request object
+* @param {Object} res Response object
+* @returns {Object} - Returns response object
+*/
   findAll(req, res) {
     db.User.findAll({
       attributes: [
@@ -38,6 +43,7 @@ const users = {
     });
   },
   create(req, res) {
+    const password = bcrypt.hashSync(req.body.password);
     db.User.findOne({
       where: {
         email: req.body.email
@@ -48,23 +54,28 @@ const users = {
           message: `User with ${req.body.email} already exists`
         });
       }
-      db.user.create({
-        username: req.body.username,
+      db.User.create({
+        userName: req.body.userName,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password,
-        RoleId: req.body.RoleId
+        password,
+        roleId: req.body.roleId
       }).then((user) => {
-        // const jwtData = {
-        //   username: user.username,
-        //   email: user.email,
-        //   RoleId: user.RoleId,
-        //   userId: user.id
-        // };
-        // const token = jwt.sign(jwtData, secretKey, { expiresIn: 86400 });
+        const userData = {
+          userName: user.userName,
+          email: user.email,
+          roleId: user.roleId,
+          userId: user.id
+        };
+        console.log("userData", userData);
+        // const token = jwt.sign(userData, Secret, {
+        //   expiresInMinutes: 1440 // expires in 24 hours
+        // });
+        const token = jwt.sign(userData, secret, { expiresIn: 86400 });
+        console.log("token", token);
         user = userAttributes(user);
-        return res.status(201).json({ user });
+        return res.status(201).json({ token, expiresIn: 86400, user });
       })
         .catch(error => res.status(400).json(error.errors));
     });
