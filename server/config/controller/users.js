@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 import db from '../../models/';
+import validator from 'validator';
+import validateSignupForm from '../../shared/validations/signup';
 
 const secret = process.env.JWT_SECRET_KEY || 'rawsecret';
 const userAttributes = (user) => {
@@ -17,14 +19,51 @@ const userAttributes = (user) => {
 
   return attributes;
 };
-const users = {
+class Users {
+
+
+  /**
+   * Validate the login form
+   *
+   * @param {object} payload - the HTTP body message
+   * @returns {object} The result of validation. Object contains a boolean validation result,
+   *                   errors tips, and a global message for the whole form.
+   */
+  static validateLoginForm(payload) {
+    const errors = {};
+    let isFormValid = true;
+    let message = '';
+
+    if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
+      isFormValid = false;
+      console.log('here');
+      errors.email = 'Please provide your email address.';
+    }
+
+    if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
+      isFormValid = false;
+      console.log('there');
+      errors.password = 'Please provide your password.';
+    }
+
+    if (!isFormValid) {
+      message = 'Check the form for errors.';
+    }
+
+    return {
+      success: isFormValid,
+      message,
+      errors
+    };
+  }
+
   /**
   * Get all users
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  findAll(req, res) {
+  static findAll(req, res) {
     db.Users.findAll({
       attributes: [
         'id',
@@ -39,14 +78,20 @@ const users = {
     }).then((result) => {
       return res.status(200).json({ users: result });
     });
-  },
+  }
   /**
   * Create a user
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  create(req, res) {
+  static create(req, res) {
+    console.log('i reach here');
+    console.log('request is ', req.body);
+    const { errors, isFormValid } = validateSignupForm(req.body);
+    if (!isFormValid) {
+      return res.status(400).json(errors);
+    }
     const password = req.body.password;
     db.Users.findOne({
       where: {
@@ -78,14 +123,14 @@ const users = {
       })
         .catch(error => res.status(400).json(error.errors));
     });
-  },
+  }
   /**
   * Logs in a user
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  logIn(req, res) {
+  static logIn(req, res) {
     if (!req.body.userName || !req.body.password) {
       return res.status(404).json({ message: 'User/ password required' });
     }
@@ -104,23 +149,23 @@ const users = {
           message: 'Login Successful'
         });
       });
-  },
+  }
   /**
 * Log out a user
 * @param {Object} req Request object
 * @param {Object} res Response object
 * @returns {Object} - Returns response object
 */
-  logOut(req, res) {
+  static logOut(req, res) {
     return res.status(200).send('User logged out');
-  },
+  }
   /**
   * Returns a specific user
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  getUser(req, res) {
+  static getUser(req, res) {
     const userId = req.params.id;
     db.Users.findById(userId).then((user) => {
       if (!user) {
@@ -129,14 +174,14 @@ const users = {
       user = userAttributes(user);
       return res.status(200).json(user);
     });
-  },
+  }
   /**
   * Update property of a specific User
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  updateUser(req, res) {
+  static updateUser(req, res) {
     const userId = req.params.id;
     let updatedUser;
     db.Users.findById(userId).then((user) => {
@@ -151,14 +196,14 @@ const users = {
         return res.status(200).json(updatedUser);
       });
     });
-  },
+  }
   /**
   * Deletes a particular user
   * @param {Object} req Request object
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  removeUser(req, res) {
+  static removeUser(req, res) {
     const userId = req.params.id;
     db.Users.destroy({
       where: {
@@ -172,4 +217,4 @@ const users = {
     });
   }
 };
-export default users;
+export default Users;
