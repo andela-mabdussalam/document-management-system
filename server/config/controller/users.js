@@ -2,8 +2,9 @@ import bcrypt from 'bcrypt-nodejs';
 
 import db from '../../models/';
 
+import jwt from 'jsonwebtoken';
 
-
+const secret = process.env.JWT_SECRET_KEY || 'jhebefuehf7yu3832978ry09iofe';
 const userAttributes = (user) => {
   const attributes = {
     id: user.id,
@@ -61,15 +62,20 @@ const users = {
         password,
         roleId: req.body.roleId
       }).then((user) => {
-        // const jwtData = {
-        //   username: user.username,
-        //   email: user.email,
-        //   RoleId: user.RoleId,
-        //   userId: user.id
-        // };
-        // const token = jwt.sign(jwtData, secretKey, { expiresIn: 86400 });
+        const userData = {
+          userName: user.userName,
+          email: user.email,
+          roleId: user.roleId,
+          userId: user.id
+        };
+        console.log("userData", userData);
+        // const token = jwt.sign(userData, Secret, {
+        //   expiresInMinutes: 1440 // expires in 24 hours
+        // });
+        const token = jwt.sign(userData, secret, { expiresIn: 86400 });
+        console.log("token", token);
         user = userAttributes(user);
-        return res.status(201).json({ user });
+        return res.status(201).json({ token, expiresIn: 86400, user });
       })
         .catch(error => res.status(400).json(error.errors));
     });
