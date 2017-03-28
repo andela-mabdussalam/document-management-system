@@ -60,7 +60,7 @@ module.exports.testUser = () => {
 module.exports.createDocument = () => {
   const fakeDocument = {
     title: faker.lorem.word(),
-    content: faker.lorem.sentences().slice(0, 100),
+    content: faker.lorem.sentences(),
     access: 'public',
     ownerId: 1
   };

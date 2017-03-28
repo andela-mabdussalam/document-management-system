@@ -1,10 +1,11 @@
-import users from './controller/users';
+import users from './controller/Users';
 import roles from './controller/roles';
 import document from './controller/documents';
 
 const routes = (router, authenticate) => {
   // Routes to create user and retrieve all users
   router.post('/users/signup', users.create);
+  
   router.post('/users/login', users.logIn);
 
   // Route to logout user
