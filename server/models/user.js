@@ -1,5 +1,7 @@
+import bycrypt from 'bcrypt-nodejs';
+
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+  const Users = sequelize.define('Users', {
     userName: {
       unique: true,
       allowNull: false,
@@ -16,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       unique: true,
       allowNull: false,
+      validate: {
+        isEmail: true
+      },
       type: DataTypes.STRING
     },
     password: {
@@ -30,16 +35,32 @@ module.exports = (sequelize, DataTypes) => {
     {
       classMethods: {
         associate: (models) => {
-          User.belongsTo(models.Role, {
+          Users.belongsTo(models.Roles, {
             foreignKey: 'roleId',
             onDelete: 'CASCADE',
           });
 
-          User.hasMany(models.Doc, {
+          Users.hasMany(models.Documents, {
             foreignKey: 'ownerId',
           });
         }
+      },
+      instanceMethods: {
+        validatePassword(password) {
+          return bycrypt.compareSync(password, this.password);
+        },
+        hashPassword() {
+          this.password = bycrypt.hashSync(this.password, bycrypt.genSaltSync(9));
+        }
+      },
+      hooks: {
+        beforeCreate(user) {
+          user.hashPassword();
+        },
+        beforeUpdate(user) {
+          user.hashPassword();
+        }
       }
     });
-  return User;
+  return Users;
 };
