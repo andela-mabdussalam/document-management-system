@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import { Link, IndexLink } from 'react-router';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FlashMessagesList from './flash/FlashMessagesList';
+
 // import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
@@ -25,6 +28,7 @@ class App extends React.Component{
               </div>
           </div>
         </AppBar>
+          <FlashMessagesList />
           {this.props.children}
         </div>
       </MuiThemeProvider>
