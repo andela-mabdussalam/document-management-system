@@ -2,7 +2,9 @@ import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 import db from '../../models/';
 import validator from 'validator';
-import validateSignupForm from '../../shared/validations/signup';
+import commonValidations from '../../shared/validations/signup';
+import Promise from 'bluebird';
+import isEmpty from 'lodash/isEmpty';
 
 const secret = process.env.JWT_SECRET_KEY || 'rawsecret';
 const userAttributes = (user) => {
@@ -21,7 +23,33 @@ const userAttributes = (user) => {
 };
 class Users {
 
+static validateSignupForm(data, otherValidations) {
+  let { errors } = otherValidations(data);
 
+  return Promise.all([
+    db.Users.findOne({
+      where: {
+        email: data.email
+      }
+    }).then((returnedUser) => {
+      if(returnedUser) { errors.email = ' There is a user with such email';}
+    }),
+
+    db.Users.findOne({
+      where: {
+        userName: data.userName
+      }
+    }).then((returnedUser) => {
+      if(returnedUser) { errors.username = ' There is a user with such username';}
+    })
+
+  ]).then(() => {
+    return {
+      errors,
+      isFormValid: isEmpty(errors)
+    }
+  });
+}
   /**
    * Validate the login form
    *
@@ -88,7 +116,7 @@ class Users {
   static create(req, res) {
     console.log('i reach here');
     console.log('request is ', req.body);
-    const { errors, isFormValid } = validateSignupForm(req.body);
+    Users.validateSignupForm(req.body, commonValidations).then(({ errors, isFormValid }) => {
     if (!isFormValid) {
       return res.status(400).json(errors);
     }
@@ -122,6 +150,7 @@ class Users {
         return res.status(201).json({ token, expiresIn: 86400, user });
       })
         .catch(error => res.status(400).json(error.errors));
+    });
     });
   }
   /**
