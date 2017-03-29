@@ -9,9 +9,11 @@ const SignUpForm = ({
   userSignUpRequest,
   onSubmit,
   onChange,
+  checkUserExists,
   errors,
   user,
-  isLoading
+  isLoading,
+  addFlashMessage
 }) => (
   <Card className="container">
     <form action="/" onSubmit={onSubmit}>
@@ -24,6 +26,7 @@ const SignUpForm = ({
           name="userName"
           errorText={errors.userName}
           onChange={onChange}
+          checkUserExists={checkUserExists}
           value={user.userName}
         />
       </div>
@@ -54,6 +57,7 @@ const SignUpForm = ({
           name="email"
           errorText={errors.email}
           onChange={onChange}
+          checkUserExists={checkUserExists}
           value={user.email}
         />
       </div>
@@ -94,7 +98,8 @@ SignUpForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  checkUserExists: PropTypes.func
 };
 
 export default SignUpForm;

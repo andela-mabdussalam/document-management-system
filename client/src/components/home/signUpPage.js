@@ -3,6 +3,7 @@ import SignUpForm from './signUpForm';
 import { connect } from 'react-redux';
 import { userSignUpRequest } from '../../actions/signupActions';
 // import axios from 'axios';
+import { addFlashMessage } from '../../actions/flashMessages';
 import validateSignupForm from '../../../../server/shared/validations/signup';
 class SignUpPage extends React.Component {
 
@@ -47,13 +48,13 @@ class SignUpPage extends React.Component {
     });
   }
   isValid() {
-    const { errors, isValid } = validateSignupForm(this.state.user);
+    const { errors, isFormValid } = validateSignupForm(this.state.user);
 
     if(!isValid) {
       this.setState({ errors });
     }
 
-    return isValid;
+    return isFormValid;
   }
   /**
    * Process the form.
@@ -64,11 +65,17 @@ class SignUpPage extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
 
-    if(this.isValid()){
+    if(true){
     this.setState({ errors: {}, isLoading: true});
     // axios.post('/api/users/signup', this.state.user);
     this.props.userSignUpRequest(this.state.user).then(
-      () => {},
+      () => {
+        this.props.addFlashMessage({
+          type: 'success',
+          text: 'You signed up successfully, Welcome!'
+        })
+        this.context.router.push('/')
+      },
       ({ response }) => {
         this.setState({errors: response.data, isLoading: false});
       }
@@ -117,7 +124,7 @@ class SignUpPage extends React.Component {
    * Render the component.
    */
   render() {
-    const { userSignUpRequest } = this.props;
+    const { userSignUpRequest, addFlashMessage } = this.props;
     return (
       <SignUpForm
         userSignUpRequest={userSignUpRequest}
@@ -126,6 +133,7 @@ class SignUpPage extends React.Component {
         errors={this.state.errors}
         user={this.state.user}
         isLoading={this.state.isLoading}
+        addFlashMessage={addFlashMessage}
       />
     );
   }
@@ -133,6 +141,10 @@ class SignUpPage extends React.Component {
 }
 
 SignUpPage.propTypes = {
-  userSignUpRequest: React.PropTypes.func.isRequired
+  userSignUpRequest: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.func.isRequired
 }
-export default connect((state) => {return {} },{ userSignUpRequest })(SignUpPage);
+SignUpPage.contextTypes = {
+  router: React.PropTypes.object.isRequired
+}
+export default connect((state) => {return {} },{ userSignUpRequest, addFlashMessage })(SignUpPage);
