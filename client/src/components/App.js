@@ -7,27 +7,14 @@ import FlashMessagesList from './flash/FlashMessagesList';
 // import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
+import Navbar from './common/Navbar';
 
 class App extends React.Component{
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div>
-          <AppBar
-            title="Document Manager"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
-            >
-            <div className="top-bar">
-              <div className="top-bar-left">
-                <IndexLink to="/">React App</IndexLink>
-              </div>
-
-              <div className="top-bar-right">
-                <Link to="/login">Log in</Link>
-                <Link to="/signup">Sign up</Link>
-              </div>
-          </div>
-        </AppBar>
+         <Navbar />
           <FlashMessagesList />
           {this.props.children}
         </div>

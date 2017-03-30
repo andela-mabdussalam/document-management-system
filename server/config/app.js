@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', router);
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/src/index.html'));
 });
 // Setup a default catch-all route that sends back a welcome message in JSON format.

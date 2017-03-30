@@ -9,6 +9,15 @@ export function setCurrentUser(user) {
     user
   }
   }
+
+  export function logout(data) {
+    return dispatch => {
+        localStorage.removeItem('jwtToken');
+        setAuthorizationToken(false);
+        dispatch(setCurrentUser({}));
+    }
+  }
+
 export function login(data) {
   console.log('data is', data);
   return dispatch => {

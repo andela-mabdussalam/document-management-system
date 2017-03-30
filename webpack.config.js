@@ -17,6 +17,7 @@ export default {
     filename: 'bundle.js'
   },
   devServer: {
+    historyApiFallback: true,
     contentBase: path.resolve(__dirname, 'client/src')
   },
   plugins: [
@@ -36,7 +37,8 @@ export default {
       { test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=5000' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
-      { test: /materialize-css\/bin\//, loader:'imports?jquery,$=jquery,hammerjs'}
+      { test: /materialize-css\/bin\//, loader:'imports?jquery,$=jquery,hammerjs'},
+      { test: /\.(jpg|png|svg)$/, loader: 'url-loader', options: {limit: 25000,},}
     ]
   },
   node: {
