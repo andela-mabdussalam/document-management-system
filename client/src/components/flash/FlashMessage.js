@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import 'materialize-css/dist/css/materialize.css';
-import 'materialize-css/dist/js/materialize.js';
+// import 'materialize-css/dist/css/materialize.css';
+// import 'materialize-css/dist/js/materialize.js';
 class FlashMessage extends React.Component {
 
   constructor(props){
