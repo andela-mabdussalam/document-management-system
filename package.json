@@ -50,6 +50,7 @@
     "body-parser": "^1.16.1",
     "chai": "^3.5.0",
     "cheerio": "0.22.0",
+    "classnames": "^2.2.5",
     "colors": "1.1.2",
     "compression": "1.6.1",
     "cross-env": "1.0.7",

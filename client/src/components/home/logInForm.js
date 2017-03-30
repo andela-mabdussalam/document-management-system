@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from '../../../../server/shared/validations/login';
-import { login } from '../../actions/login';
+import { login } from '../../actions/authActions';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
@@ -47,7 +47,6 @@ class LoginForm extends React.Component {
       this.props.login(this.state).then(
         (res) => this.context.router.push('/'),
         (errors) => {
-          console.log('erwjekhrew', errors.response.data.errors)
           this.setState({ errors: errors.response.data.errors, isLoading: false })
         }
       );

@@ -23,6 +23,22 @@ const userAttributes = (user) => {
 };
 class Users {
 
+static identifier(req,res) {
+  console.log('req is', req.params.identifier);
+  db.Users.findAll({
+    where: {
+  $or: [{
+    userName: req.params.identifier,
+  }, {
+    email: req.params.identifier
+  }]
+}
+  }).then((user) => {
+    console.log('user is', user);
+    res.json({ user });
+  })
+}
+
 static validateSignupForm(data, otherValidations) {
   let { errors } = otherValidations(data);
 
@@ -160,13 +176,22 @@ static validateSignupForm(data, otherValidations) {
   * @returns {Object} - Returns response object
   */
   static logIn(req, res) {
-    if (!req.body.userName || !req.body.password) {
-      return res.status(404).json({ message: 'User/ password required' });
+    console.log('req is', req.body);
+    const { identifier, password } = req.body;
+    if (!req.body.identifier || !req.body.password) {
+      return res.status(401).json({ message: 'User/password is required' });
     }
-    db.Users.findOne({ where: { userName: req.body.userName } })
-      .then((user) => {
+    db.Users.find({
+      where: {
+        $or: [
+          { userName: identifier},
+          {  email: identifier}
+        ]
+      }
+    }).then((user) => {
+      if(user) {
         if (!bcrypt.compareSync(req.body.password, user.password)) {
-          return res.status(404).json({ message: 'Incorrect Password' });
+          return res.status(401).json({ errors: 'Incorrect Password' });
         }
         const token = jwt.sign({
           userId: user.id,
@@ -177,7 +202,13 @@ static validateSignupForm(data, otherValidations) {
           usertoken: token,
           message: 'Login Successful'
         });
-      });
+      } else {
+        res.status(401).json({ errors: { form: 'Invalid Credentials'}})
+      }
+    }).catch((err) =>
+    {
+      console.log('the error is', err);
+  })
   }
   /**
 * Log out a user

@@ -5,12 +5,13 @@ import document from './controller/documents';
 const routes = (router, authenticate) => {
   // Routes to create user and retrieve all users
   router.post('/users/signup', users.create);
-  
+
   router.post('/users/login', users.logIn);
 
   // Route to logout user
   router.post('/users/logout', users.logOut);
-
+  router.get('/users/:identifier', users.identifier);
+  
   // Route to get all users
   router.get('/users', authenticate.verifyToken, authenticate.isAdmin, users.findAll);
 

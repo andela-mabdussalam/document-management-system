@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import SignUpForm from './signUpForm';
 import { connect } from 'react-redux';
-import { userSignUpRequest } from '../../actions/signupActions';
+import { userSignUpRequest, isUserExists } from '../../actions/signupActions';
 // import axios from 'axios';
 import { addFlashMessage } from '../../actions/flashMessages';
 import validateSignupForm from '../../../../server/shared/validations/signup';
@@ -25,12 +25,14 @@ class SignUpPage extends React.Component {
         passwordConfirm: '',
         roleId: 2
       },
-       isLoading: false
+       isLoading: false,
+       invalid: false
 
     };
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
+    this.checkUserExists = this.checkUserExists.bind(this);
   }
 
   /**
@@ -55,6 +57,26 @@ class SignUpPage extends React.Component {
     }
 
     return isFormValid;
+  }
+
+  checkUserExists(event){
+    const field = event.target.name;
+    const val = event.target.value;
+    if( val !== '') {
+      this.props.isUserExists(val).then(res => {
+        let errors = this.state.errors;
+        let invalid
+        console.log('res is',res.data.user);
+        if(res.data.user.length > 0) {
+          errors[field] = 'A user with this ' + field + ' already exists';
+          invalid = true;
+        } else{
+          errors[field] = '';
+          invalid = false;
+        }
+        this.setState({ errors, invalid})
+      });
+    }
   }
   /**
    * Process the form.
@@ -124,7 +146,7 @@ class SignUpPage extends React.Component {
    * Render the component.
    */
   render() {
-    const { userSignUpRequest, addFlashMessage } = this.props;
+    const { userSignUpRequest, addFlashMessage , isUserExists} = this.props;
     return (
       <SignUpForm
         userSignUpRequest={userSignUpRequest}
@@ -134,6 +156,8 @@ class SignUpPage extends React.Component {
         user={this.state.user}
         isLoading={this.state.isLoading}
         addFlashMessage={addFlashMessage}
+        checkUserExists={this.checkUserExists}
+        invalid={this.state.invalid}
       />
     );
   }
@@ -142,9 +166,10 @@ class SignUpPage extends React.Component {
 
 SignUpPage.propTypes = {
   userSignUpRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  addFlashMessage: React.PropTypes.func.isRequired,
+  isUserExists: React.PropTypes.func.isRequired
 }
 SignUpPage.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
-export default connect((state) => {return {} },{ userSignUpRequest, addFlashMessage })(SignUpPage);
+export default connect((state) => {return {} },{ userSignUpRequest, addFlashMessage, isUserExists })(SignUpPage);

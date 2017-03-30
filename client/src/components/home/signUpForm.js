@@ -13,11 +13,12 @@ const SignUpForm = ({
   errors,
   user,
   isLoading,
-  addFlashMessage
+  addFlashMessage,
+  invalid
 }) => (
   <Card className="container">
     <form action="/" onSubmit={onSubmit}>
-      <h2 className="card-heading">Sign Up</h2>
+      <h3 className="card-heading">Sign Up</h3>
 
 
       <div className="field-line">
@@ -26,7 +27,7 @@ const SignUpForm = ({
           name="userName"
           errorText={errors.userName}
           onChange={onChange}
-          checkUserExists={checkUserExists}
+          onBlur={checkUserExists}
           value={user.userName}
         />
       </div>
@@ -57,7 +58,7 @@ const SignUpForm = ({
           name="email"
           errorText={errors.email}
           onChange={onChange}
-          checkUserExists={checkUserExists}
+          onBlur={checkUserExists}
           value={user.email}
         />
       </div>
@@ -84,11 +85,8 @@ const SignUpForm = ({
         />
       </div>
 
-      <div className="button-line">
-        <RaisedButton disabled={isLoading} type="submit" label="Create New Account" primary />
-      </div>
-
-      <CardText>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
+<RaisedButton disabled={ isLoading || invalid} type="submit" label="Create New Account" primary />
+<CardText>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
     </form>
   </Card>
 );
