@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
+import { Redirect } from 'react-router-dom';
 // import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from '../../../../server/shared/validations/login';
 import { login } from '../../actions/authActions';
@@ -7,6 +9,8 @@ import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Chip from 'material-ui/Chip';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 const styles = {
   chip: {
@@ -25,7 +29,8 @@ class LoginForm extends React.Component {
       identifier: '',
       password: '',
       errors: {},
-      isLoading: false
+      isLoading: false,
+      done: false
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -40,12 +45,14 @@ class LoginForm extends React.Component {
     return isValid;
   }
 
-  onSubmit(e) {
+  onSubmit(e, context) {
     e.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
       this.props.login(this.state).then(
-        (res) => this.context.router.push('/'),
+        (res) => {
+          this.setState({done: true});
+        },
         (errors) => {
           this.setState({ errors: errors.response.data.errors, isLoading: false })
         }
@@ -66,10 +73,9 @@ class LoginForm extends React.Component {
 
   render() {
     const { errors, identifier, password, isLoading } = this.state;
-    return (
-
+    const form = (
       <Card className="container">
-        <form action="/" onSubmit={this.onSubmit}>
+        <form  onSubmit={this.onSubmit}>
           <h3 className="card-heading">Log in</h3>
 
    <Chip className="added">{errors.form}</Chip>
@@ -98,16 +104,25 @@ class LoginForm extends React.Component {
     <RaisedButton disabled={ isLoading} type="submit" label="Create New Account" name="action" primary />
       </form>
     </Card>
+    )
+    return (
+        <div>
+            { this.state.done ? <Redirect to="/dashboard" /> : form }
+        </div>
+
+
     );
   }
 }
 
 LoginForm.propTypes = {
-  login: React.PropTypes.func.isRequired
+  login: PropTypes.func.isRequired
 };
 
 LoginForm.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
+
+
 
 export default connect(null, { login })(LoginForm);

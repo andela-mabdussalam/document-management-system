@@ -1,8 +1,10 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
-import { Link, IndexLink } from 'react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
+import {blue500, lime900, teal500
+} from 'material-ui/styles/colors';
 class Navbar extends React.Component {
   logout(e) {
     e.preventDefault();
@@ -26,12 +28,9 @@ class Navbar extends React.Component {
      <AppBar
        title="Document Manager"
        iconClassNameRight="muidocs-icon-navigation-expand-more"
+       style={{backgroundColor: teal500}}
        >
        <div className="top-bar">
-         <div className="top-bar-left">
-           <IndexLink to="/">React App</IndexLink>
-         </div>
-
          <div className="top-bar-right">
           { isAuthenticated ? userLinks : guestLinks }
          </div>

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
@@ -91,13 +91,13 @@ const SignUpForm = ({
   </Card>
 );
 
-SignUpForm.propTypes = {
-  userSignUpRequest: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  checkUserExists: PropTypes.func
-};
+// SignUpForm.propTypes = {
+//   userSignUpRequest: PropTypes.func.isRequired,
+//   onSubmit: PropTypes.func.isRequired,
+//   onChange: PropTypes.func.isRequired,
+//   errors: PropTypes.object.isRequired,
+//   user: PropTypes.object.isRequired,
+//   checkUserExists: PropTypes.func
+// };
 
 export default SignUpForm;

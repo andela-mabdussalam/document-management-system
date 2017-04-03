@@ -164,11 +164,11 @@ class SignUpPage extends React.Component {
 
 }
 
-SignUpPage.propTypes = {
-  userSignUpRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired,
-  isUserExists: React.PropTypes.func.isRequired
-}
+// SignUpPage.propTypes = {
+//   userSignUpRequest: PropTypes.func.isRequired,
+//   addFlashMessage: PropTypes.func.isRequired,
+//   isUserExists: PropTypes.func.isRequired
+// }
 SignUpPage.contextTypes = {
   router: React.PropTypes.object.isRequired
 }

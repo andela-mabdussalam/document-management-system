@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardTitle } from 'material-ui/Card';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 class HomePage extends React.Component {
   render() {
