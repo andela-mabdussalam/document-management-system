@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('docs', {
+    return queryInterface.createTable('Documents', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,19 +9,38 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Title field has not been filled'
+          }
+        }
       },
       content: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.TEXT,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Content field is empty'
+          }
+        }
       },
       ownerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'ownerId'
+        }
       },
       access: {
         type: Sequelize.STRING,
-        defaultValue: 'public'
+        defaultValue: 'public',
+        allowNull: false,
+        validate: {
+          isIn: [['private', 'public', 'role']]
+        }
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +53,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('docs');
+    return queryInterface.dropTable('Documents');
   }
 };

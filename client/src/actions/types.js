@@ -1,0 +1,13 @@
+export const ADD_FLASH_MESSAGE = 'ADD_FLASH_MESSAGE';
+export const DELETE_FLASH_MESSAGE = 'DELETE_FLASH_MESSAGE';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const GET_PUBLIC_DOCUMENTS = 'GET_PUBLIC_DOCUMENTS';
+export const GET_DOCUMENT = 'GET_DOCUMENT';
+export const CREATE_DOCUMENT = 'CREATE_DOCUMENT';
+export const GET_USERS = 'GET_USERS';
+export const GET_USER = 'GET_USER';
+export const EDIT_USER = 'EDIT_USER';
+export const DELETE_USER = 'DELETE_USER';
+export const CREATE_USER = 'CREATE_USER';
+export const GET_ROLES = 'GET_ROLES';
+export const CREATE_ROLE = 'CREATE_ROLE';
