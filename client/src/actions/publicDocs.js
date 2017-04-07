@@ -14,13 +14,27 @@ export function viewDocument(document) {
     document
   }
 }
-export function getPublicDocs() {
-  console.log("I got here");
+export function searchDocs(document) {
+  return {
+    type: SEARCH_DOCUMENT,
+    document
+  }
+}
+export function getPublicDocs(params) {
   return dispatch => {
-    return axios.get('/api/documents')
-    .then((documents) => {
-      console.log('documents', documents);
-      return dispatch(getPublicDocuments(documents));
+    return axios.get(`/api/documents?offset=${params.offset}&limit=${params.limit}`)
+    .then((response) => {
+      return dispatch(getPublicDocuments(response.data.result));
+    });
+  }
+}
+export function searchDocument(params) {
+  console.log(params);
+  return dispatch => {
+    return axios.post(`/api/documents/search?query=${params}`)
+    .then((response) => {
+      console.log('the search word is', response);
+      return dispatch(getPublicDocuments(response.data.result));
     });
   }
 }
