@@ -1,8 +1,12 @@
 import React from 'react';
-import { getPublicDocs } from '../../actions/publicDocs';
+import { getPublicDocs, searchDocument } from '../../actions/publicDocs';
+import * as ReactRouter from 'react-router';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {GridList, GridTile} from 'material-ui/GridList';
+import renderHTML from 'react-render-html';
+import Pagination from 'material-ui-pagination';
 import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
@@ -10,6 +14,9 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import TextField from 'material-ui/TextField';
+
 
 const styles = {
   root: {
@@ -19,7 +26,6 @@ const styles = {
   },
   gridList: {
     width: 1200,
-    height: 1200,
     overflowY: 'auto',
 
   },
@@ -41,34 +47,67 @@ class PublicDocs extends React.Component {
     // set the initial component state
     this.state = {
       documents: [],
-      tileData: []
+      tileData: [],
+      limit: 20,
+      page: 1,
+      offset: 0,
+      total: 0,
+      display: 7,
+      number: 7,
+      name:"",
+      search:""
     };
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.getDocs = this.getDocs.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
+ getDocs(actionToCall, params, set) {
+   actionToCall(params)
+   .then((response) => {
+     if(set){
+       this.setState({search: ""});
+     }
+     console.log('the response is', response.documents);
+     const count = response.documents.pop();
+    //  if(count === 0){}
+
+     this.setState({documents: response.documents, total: count.count});
+     let elements = response.documents;
+     const arrayr = [];
+     elements.forEach((element) => {
+       const obj = {
+         "img"   : './images/grid-list/bg1.jpg',
+         "title" : element.content,
+         "author" : element.title,
+         "username": element.User.userName,
+       };
+       arrayr.push(obj);
+     });
+     this.setState({tileData: arrayr});
+   }, (error) => {
+   });
+ }
   componentWillMount() {
-    this.props.getPublicDocs()
-    .then((response) => {
-      console.log('cool', response.documents.data)
-      this.setState({documents: response.documents.data});
-      var elements = this.state.documents;
-      const arrayr = [];
-      elements.forEach((element) => {
-        console.log('the eleement is', element);
-        const obj = {
-          "img"   : './images/grid-list/bg1.jpg',
-          "title" : element.content,
-          "author" : element.title,
-          "username": element.User.userName,
-        };
-        arrayr.push(obj);
-      });
-      this.setState({tileData: arrayr});
-    }, (error) => {
-      console.log("Mariam Error", error.response.data.message)
-    });
+    console.log("sdfghjukilltyutytrdertdhyjukljhgfgkljhgf");
+    this.getDocs(this.props.getPublicDocs, {offset: this.state.offset, limit: this.state.limit});
   }
 
   componentDidMount() {
+  }
+  showsth(){
+    console.log('hello');
+  }
+  handlePageChange(pageNumber) {
+    const offset = (pageNumber - 1) * this.state.limit;
+    this.setState({
+      page: pageNumber,
+      offset: offset
+    });
+      setTimeout(() => { this.getDocs(this.props.getPublicDocs, {limit: this.state.limit, offset: offset})}, 10);
   }
   /**
   * Process the form.
@@ -80,16 +119,37 @@ class PublicDocs extends React.Component {
   * Render the component.
   */
   render() {
+
     const { documents, tileData } = this.state;
-    console.log('the data is', tileData);
     if (documents.length > 0) {
       return(
         <div style={styles.root}>
+          <div>
+            <Pagination
+              total = { Math.ceil(this.state.total/this.state.limit)  }
+              current = { this.state.page }
+              display = { this.state.display }
+              onChange = { this.handlePageChange }
+            />
+          </div>
+
+          <div className="field-line">
+          <TextField
+          floatingLabelText="Search"
+          name="search"
+          onChange={this.onChange}
+          value={this.state.search}
+          />
+        <FlatButton onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
+        <FlatButton onTouchTap={() =>
+            (this.getDocs(this.props.getPublicDocs, {limit: this.state.limit, offset: this.state.offset},"set"))
+          } label="Reset" />
+          </div>
           <GridList
             cellHeight={230}
             style={styles.gridList}
             cols={4}
-            padding={34}
+            padding={14}
             >
 
             {tileData.map((tile) => (
@@ -97,7 +157,7 @@ class PublicDocs extends React.Component {
                 key={tile.title}
                 title={tile.author}
                 subtitle={<span>by <b>{tile.username}</b></span>}
-                actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
+                actionIcon={<IconButton onTouchTap={this.props.onSelectTab.bind(this, tile)}><StarBorder color="white"/><i className="material-icons">add</i></IconButton>}
                 titleStyle={styles.titleStyle}
                 >
                 { tile.content }
@@ -106,7 +166,7 @@ class PublicDocs extends React.Component {
                 </RaisedButton>
                 <hr/>
                 <div id="onboard">
-                  {tile.title}
+                  {renderHTML(tile.title)}
                 </div>
               </GridTile>
             ))}
@@ -131,4 +191,4 @@ class PublicDocs extends React.Component {
 
 
 
-  export default connect(storeToProps, { getPublicDocs })(PublicDocs);
+  export default connect(storeToProps, { getPublicDocs ,searchDocument})(PublicDocs);
