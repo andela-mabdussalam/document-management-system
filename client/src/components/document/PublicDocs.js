@@ -4,7 +4,7 @@ import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {GridList, GridTile} from 'material-ui/GridList';
+import { GridList, GridTile } from 'material-ui/GridList';
 import renderHTML from 'react-render-html';
 import Pagination from 'material-ui-pagination';
 import IconButton from 'material-ui/IconButton';
@@ -13,7 +13,7 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
-import {blue500, red500, greenA200} from 'material-ui/styles/colors';
+import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import TextField from 'material-ui/TextField';
 
@@ -54,8 +54,8 @@ class PublicDocs extends React.Component {
       total: 0,
       display: 7,
       number: 7,
-      name:"",
-      search:""
+      name: "",
+      search: ""
     };
     this.handlePageChange = this.handlePageChange.bind(this);
     this.getDocs = this.getDocs.bind(this);
@@ -65,40 +65,40 @@ class PublicDocs extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
- getDocs(actionToCall, params, set) {
-   actionToCall(params)
-   .then((response) => {
-     if(set){
-       this.setState({search: ""});
-     }
-     console.log('the response is', response.documents);
-     const count = response.documents.pop();
-    //  if(count === 0){}
+  getDocs(actionToCall, params, set) {
+    actionToCall(params)
+      .then((response) => {
+        if (set) {
+          this.setState({ search: "" });
+        }
+        console.log('the response is', response.documents);
+        const count = response.documents.pop();
+        //  if(count === 0){}
 
-     this.setState({documents: response.documents, total: count.count});
-     let elements = response.documents;
-     const arrayr = [];
-     elements.forEach((element) => {
-       const obj = {
-         "img"   : './images/grid-list/bg1.jpg',
-         "title" : element.content,
-         "author" : element.title,
-         "username": element.User.userName,
-       };
-       arrayr.push(obj);
-     });
-     this.setState({tileData: arrayr});
-   }, (error) => {
-   });
- }
+        this.setState({ documents: response.documents, total: count.count });
+        let elements = response.documents;
+        const arrayr = [];
+        elements.forEach((element) => {
+          const obj = {
+            "img": './images/grid-list/bg1.jpg',
+            "title": element.content,
+            "author": element.title,
+            "username": element.User.userName,
+          };
+          arrayr.push(obj);
+        });
+        this.setState({ tileData: arrayr });
+      }, (error) => {
+      });
+  }
   componentWillMount() {
     console.log("sdfghjukilltyutytrdertdhyjukljhgfgkljhgf");
-    this.getDocs(this.props.getPublicDocs, {offset: this.state.offset, limit: this.state.limit});
+    this.getDocs(this.props.getPublicDocs, { offset: this.state.offset, limit: this.state.limit });
   }
 
   componentDidMount() {
   }
-  showsth(){
+  showsth() {
     console.log('hello');
   }
   handlePageChange(pageNumber) {
@@ -107,7 +107,7 @@ class PublicDocs extends React.Component {
       page: pageNumber,
       offset: offset
     });
-      setTimeout(() => { this.getDocs(this.props.getPublicDocs, {limit: this.state.limit, offset: offset})}, 10);
+    setTimeout(() => { this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: offset }) }, 10);
   }
   /**
   * Process the form.
@@ -122,49 +122,49 @@ class PublicDocs extends React.Component {
 
     const { documents, tileData } = this.state;
     if (documents.length > 0) {
-      return(
+      return (
         <div style={styles.root}>
           <div>
             <Pagination
-              total = { Math.ceil(this.state.total/this.state.limit)  }
-              current = { this.state.page }
-              display = { this.state.display }
-              onChange = { this.handlePageChange }
+              total={Math.ceil(this.state.total / this.state.limit)}
+              current={this.state.page}
+              display={this.state.display}
+              onChange={this.handlePageChange}
             />
           </div>
 
           <div className="field-line">
-          <TextField
-          floatingLabelText="Search"
-          name="search"
-          onChange={this.onChange}
-          value={this.state.search}
-          />
-        <FlatButton onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
-        <FlatButton onTouchTap={() =>
-            (this.getDocs(this.props.getPublicDocs, {limit: this.state.limit, offset: this.state.offset},"set"))
-          } label="Reset" />
+            <TextField
+              floatingLabelText="Search"
+              name="search"
+              onChange={this.onChange}
+              value={this.state.search}
+            />
+            <FlatButton onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
+            <FlatButton onTouchTap={() =>
+              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, "set"))
+            } label="Reset" />
           </div>
           <GridList
             cellHeight={230}
             style={styles.gridList}
             cols={4}
             padding={14}
-            >
+          >
 
             {tileData.map((tile) => (
               <GridTile
                 key={tile.title}
                 title={tile.author}
                 subtitle={<span>by <b>{tile.username}</b></span>}
-                actionIcon={<IconButton onTouchTap={this.props.onSelectTab.bind(this, tile)}><StarBorder color="white"/><i className="material-icons">add</i></IconButton>}
+                actionIcon={<IconButton onTouchTap={this.props.onSelectTab.bind(this, tile)}><StarBorder color="white" /><i className="material-icons">add</i></IconButton>}
                 titleStyle={styles.titleStyle}
-                >
-                { tile.content }
+              >
+                {tile.content}
                 <RaisedButton label="View Document" fullWidth={true} backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">explore</i>
                 </RaisedButton>
-                <hr/>
+                <hr />
                 <div id="onboard">
                   {renderHTML(tile.title)}
                 </div>
@@ -173,22 +173,23 @@ class PublicDocs extends React.Component {
           </GridList>
         </div>
 
-      )} else {
-        return(
-          <div>
-            <p>No documents</p>
-          </div>
-        )
-      }
+      )
+    } else {
+      return (
+        <div>
+          <p>No documents</p>
+        </div>
+      )
     }
   }
+}
 
-  const storeToProps = (state) => {
-    return {
-      documents: state.getDocuments
-    }
+const storeToProps = (state) => {
+  return {
+    documents: state.getDocuments
   }
+}
 
 
 
-  export default connect(storeToProps, { getPublicDocs ,searchDocument})(PublicDocs);
+export default connect(storeToProps, { getPublicDocs, searchDocument })(PublicDocs);

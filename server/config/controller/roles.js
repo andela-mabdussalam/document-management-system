@@ -52,6 +52,7 @@ const roles = {
    * @returns {object} all roles.
    */
   getAllRoles(req, res) {
+    console.log('gets right here');
     DB.Roles.findAll().then((roleReturned) => {
       if (!roleReturned) {
         return res.status(404).send({ message: 'No role found' });

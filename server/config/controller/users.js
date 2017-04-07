@@ -14,7 +14,7 @@ const userAttributes = (user) => {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
-    roleId: user.roleId,
+    userRoleId: user.roleId,
     createdAt: user.createdAt,
     updatedAt: user.updatedAtg
   };
@@ -39,7 +39,8 @@ static identifier(req,res) {
   })
 }
 
-static validateSignupForm(data, otherValidations) {
+  static validateSignupForm(data, otherValidations) {
+    console.log('data is', data);
   let { errors } = otherValidations(data);
 
   return Promise.all([
@@ -108,7 +109,11 @@ static validateSignupForm(data, otherValidations) {
   * @returns {Object} - Returns response object
   */
   static findAll(req, res) {
-    db.Users.findAll({
+    if (req.query.limit < 0 || req.query.offset < 0) {
+      return res.status(400)
+        .send({ message: 'Enter a positive value for limit' });
+    }
+    db.Users.findAndCountAll({
       attributes: [
         'id',
         'userName',
@@ -118,9 +123,15 @@ static validateSignupForm(data, otherValidations) {
         'roleId',
         'createdAt',
         'updatedAt'
-      ]
+      ],
+      limit: req.query.limit || null,
+      offset: req.query.offset || null,
+      include: [{
+        model: db.Roles,
+        attributes: ['title']
+      }]
     }).then((result) => {
-      return res.status(200).json({ users: result });
+      return res.status(200).json({ users: [...result.rows, {count: result.count}]});
     });
   }
   /**
@@ -158,11 +169,12 @@ static validateSignupForm(data, otherValidations) {
         const userData = {
           userName: user.userName,
           email: user.email,
-          roleId: user.roleId,
+          userRoleId: user.roleId,
           userId: user.id
         };
         const token = jwt.sign(userData, secret, { expiresIn: 86400 });
         user = userAttributes(user);
+        console.log('the user is-------------------', user)
         return res.status(201).json({ token, expiresIn: 86400, user });
       })
         .catch(error => res.status(400).json(error.errors));
@@ -264,7 +276,9 @@ static validateSignupForm(data, otherValidations) {
   * @returns {Object} - Returns response object
   */
   static removeUser(req, res) {
+      console.log('right here');
     const userId = req.params.id;
+
     db.Users.destroy({
       where: {
         id: userId

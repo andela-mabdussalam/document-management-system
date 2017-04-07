@@ -7,7 +7,8 @@ module.exports.createUser = () => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: 'oluwakemi22',
+    passwordConfirm: 'oluwakemi22',
     roleId
   };
 
@@ -20,7 +21,8 @@ module.exports.createAdmin = () => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: 'oluwakemi2012',
+    passwordConfirm: 'oluwakemi2012',
     roleId
   };
   return user;
@@ -51,7 +53,8 @@ module.exports.testUser = () => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: 'oluwakemi2012',
+    passwordConfirm: 'oluwakemi2012',
     roleId
   };
   return user;

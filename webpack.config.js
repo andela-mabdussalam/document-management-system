@@ -20,25 +20,51 @@ export default {
     historyApiFallback: true,
     contentBase: path.resolve(__dirname, 'client/src')
   },
+  resolve: {
+    alias: {
+      jquery: path.resolve(__dirname, 'node_modules/jquery/dist/jquery.js')
+    }
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      'window.jQuery': 'jquery',
+      Hammer: 'hammerjs/hammer'
+    })
   ],
   module: {
     loaders: [
-      { test: /\.js$/, include:
-        [
-          path.join(__dirname, 'client/src'),
-          path.join(__dirname, 'server/shared'),
-        ]
-          , loaders: ['babel'] },
+      {
+        test: /\.js$/, include:
+          [
+            path.join(__dirname, 'client/src'),
+            path.join(__dirname, 'server/shared'),
+          ]
+        , loaders: ['babel']
+      },
+
       { test: /(\.css)$/, loaders: ['style', 'css'] },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
       { test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=5000' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
-      { test: /materialize-css\/bin\//, loader:'imports?jquery,$=jquery,hammerjs'},
-      { test: /\.(jpg|png|svg)$/, loader: 'url-loader', options: {limit: 25000,},}
+      {
+        test: /\.json$/,
+        loader: "json-loader",
+      },
+      { test: /materialize-css\/bin\//, loader: 'imports?jquery,$=jquery,hammerjs' },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      { test: /\.(jpg|png|svg)$/, loader: 'url-loader', options: { limit: 25000, }, }
     ]
   },
   node: {

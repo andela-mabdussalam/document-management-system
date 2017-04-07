@@ -50,7 +50,8 @@ module.exports = (sequelize, DataTypes) => {
           return bycrypt.compareSync(password, this.password);
         },
         hashPassword() {
-          this.password = bycrypt.hashSync(this.password, bycrypt.genSaltSync(9));
+          this.password = bycrypt
+            .hashSync(this.password, bycrypt.genSaltSync(9));
         }
       },
       hooks: {

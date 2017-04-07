@@ -11,7 +11,7 @@ const routes = (router, authenticate) => {
   // Route to logout user
   router.post('/users/logout', users.logOut);
   router.get('/users/:identifier', users.identifier);
-  
+
   // Route to get all users
   router.get('/users', authenticate.verifyToken, authenticate.isAdmin, users.findAll);
 
@@ -23,7 +23,7 @@ const routes = (router, authenticate) => {
 
   // Route to create a role
   router.route('/roles')
-    .post(authenticate.verifyToken, authenticate.isAdmin, roles.create)
+    .post(roles.create)
     .get(authenticate.verifyToken, authenticate.isAdmin, roles.getAllRoles);
 
   router.route('/roles/:id')
