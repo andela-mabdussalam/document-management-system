@@ -5,26 +5,41 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
 import {blue500, lime900, teal500
 } from 'material-ui/styles/colors';
-class Navbar extends React.Component {
+
+export class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.logout = this.logout.bind(this);
+  }
+
   logout(e) {
     e.preventDefault();
     this.props.logout();
   }
-  render () {
-  const { isAuthenticated } = this.props.auth;
 
-  const userLinks = (
-    <a href="#" onClick={this.logout.bind(this)}>Logout</a>
-  );
 
-  const guestLinks = (
+  guestLinks({ isAuthenticated, user, isAdmin}) {
+    if(isAuthenticated) {
+      return(
+        <div className="divWidth">
+          Hi!,
+          {user.userName}
+          <a href="#" onClick={this.logout}>Logout</a>
+        </div>
+      );
+    }
+
+  return(
       <div>
       <Link to="/login">Log in</Link>
       <Link to="/signup">Sign up</Link>
       </div>
 
-  )
-   return(
+  );
+}
+   render(){
+     const navLinks = this.guestLinks(this.props);
+     return(
      <AppBar
        title="Document Manager"
        iconClassNameRight="muidocs-icon-navigation-expand-more"
@@ -32,7 +47,7 @@ class Navbar extends React.Component {
        >
        <div className="top-bar">
          <div className="top-bar-right">
-          { isAuthenticated ? userLinks : guestLinks }
+          { navLinks }
          </div>
      </div>
    </AppBar>
@@ -40,12 +55,17 @@ class Navbar extends React.Component {
   }
 }
 Navbar.propTypes = {
-  auth: React.PropTypes.object.isRequired,
-  logout: React.PropTypes.func.isRequired
+  user: React.PropTypes.object,
+  logout: React.PropTypes.func.isRequired,
+  isAuthenticated: React.PropTypes.bool.isRequired,
+  isAdmin: React.PropTypes.bool.isRequired,
+
 }
-function mapStateToProps(state) {
+export const mapStateToProps = (state) => {
+  const{auth: {isAuthenticated, user}} = state;
+  const isAdmin = isAuthenticated && user.userRoleId === 1;
   return {
-    auth: state.auth
+  isAuthenticated, user, isAdmin
   }
 }
 export default connect(mapStateToProps, { logout })(Navbar);

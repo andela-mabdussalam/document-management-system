@@ -5,6 +5,7 @@ import { userSignUpRequest, isUserExists } from '../../actions/signupActions';
 // import axios from 'axios';
 import { addFlashMessage } from '../../actions/flashMessages';
 import validateSignupForm from '../../../../server/shared/validations/signup';
+import { Redirect } from 'react-router-dom';
 class SignUpPage extends React.Component {
 
   /**
@@ -23,10 +24,11 @@ class SignUpPage extends React.Component {
         email: '',
         password: '',
         passwordConfirm: '',
-        roleId: 2
+        roleId: 1
       },
        isLoading: false,
-       invalid: false
+       invalid: false,
+       done: false
 
     };
 
@@ -96,49 +98,14 @@ class SignUpPage extends React.Component {
           type: 'success',
           text: 'You signed up successfully, Welcome!'
         })
-        this.context.router.push('/')
+         this.setState({done: true})
       },
-      ({ response }) => {
+      (response) => {
+        console.log(response)
         this.setState({errors: response.data, isLoading: false});
       }
     );
   }
-// create a string for an HTTP body message
-// const userName = encodeURIComponent(this.state.user.userName);
-// const firstName = encodeURIComponent(this.state.user.firstName);
-// const lastName = encodeURIComponent(this.state.user.lastName);
-// const email = encodeURIComponent(this.state.user.email);
-// const password = encodeURIComponent(this.state.user.password);
-// const roleId = encodeURIComponent(this.state.user.roleId);
-// const formData = `userName=${userName}&firstName=${firstName}&lastName=${lastName}&email=${email}&password=${password}&roleId=${roleId}`;
-//
-// // create an AJAX request
-// const xhr = new XMLHttpRequest();
-// xhr.open('post', '/api/users/signup');
-// xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-// xhr.responseType = 'json';
-// xhr.addEventListener('load', () => {
-//   if (xhr.status === 200) {
-//     // success
-//
-//     // change the component-container state
-//     this.setState({
-//       errors: {}
-//     });
-//
-//     console.log('The form is valid');
-//   } else {
-//     // failure
-//
-//     const errors = xhr.response.errors ? xhr.response.errors : {};
-//     errors.summary = xhr.response.message;
-//
-//     this.setState({
-//       errors
-//     });
-//   }
-// });
-// xhr.send(formData);
 
   }
 
@@ -147,7 +114,7 @@ class SignUpPage extends React.Component {
    */
   render() {
     const { userSignUpRequest, addFlashMessage , isUserExists} = this.props;
-    return (
+      const signUp = (
       <SignUpForm
         userSignUpRequest={userSignUpRequest}
         onSubmit={this.processForm}
@@ -159,6 +126,11 @@ class SignUpPage extends React.Component {
         checkUserExists={this.checkUserExists}
         invalid={this.state.invalid}
       />
+  );
+  return (
+    <div>
+    { this.state.done ? <Redirect to="/dashboard" /> : signUp }
+    </div>
     );
   }
 
