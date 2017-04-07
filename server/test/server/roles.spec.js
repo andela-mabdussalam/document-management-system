@@ -3,9 +3,7 @@ import { expect } from 'chai';
 import testserver from '../../config/bin/testServer';
 import helper from '../helper';
 import DB from '../../models/';
-import chaiHttp from 'chai-http';
-import chai from 'chai';
-chai.use(chaiHttp);
+
 describe('ROLE API', () => {
   const admin = helper.adminRole();
   const userDetail = helper.testUser();
