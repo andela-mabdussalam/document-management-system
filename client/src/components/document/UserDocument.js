@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPublicDocs, searchDocument } from '../../actions/publicDocs';
+// import { UserDocument } from '../../actions/publicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,6 +16,7 @@ import FontIcon from 'material-ui/FontIcon';
 import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import TextField from 'material-ui/TextField';
+import { getUserDocument } from '../../actions/publicDocs';
 
 
 const styles = {
@@ -37,7 +38,7 @@ const iconStyles = {
   marginRight: 24,
 };
 
-class PublicDocs extends React.Component {
+class UserDocument extends React.Component {
   /**
   * Class constructor.
   */
@@ -48,7 +49,7 @@ class PublicDocs extends React.Component {
     this.state = {
       documents: [],
       tileData: [],
-      limit: 40,
+      limit: 20,
       page: 1,
       offset: 0,
       total: 0,
@@ -60,26 +61,20 @@ class PublicDocs extends React.Component {
     this.handlePageChange = this.handlePageChange.bind(this);
     this.getDocs = this.getDocs.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.clearValue = this.clearValue.bind(this);
   }
-  onChange(event) {
+  onChange(e) {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state);
   }
 
   getDocs(actionToCall, params, set) {
-    console.log('params is', set);
-    if (set === 1) {
-      $('#field').val("");
-    }
-    console.log('set is', set);
-    actionToCall(params)
+    actionToCall(this.props.userId)
       .then((response) => {
-        const count = response.documents.pop();
-        if (count.count === 0) {
-
+        console.log('this happens');
+        if (set) {
+          this.setState({ search: "" });
         }
-        //  if(count === 0){}
+        const count = 12;
+
         this.setState({ documents: response.documents, total: count.count });
         let elements = response.documents;
         const arrayr = [];
@@ -98,19 +93,16 @@ class PublicDocs extends React.Component {
       });
   }
   componentWillMount() {
-    this.getDocs(this.props.getPublicDocs, { offset: this.state.offset, limit: this.state.limit });
+    this.getDocs(this.props.getUserDocument);
   }
 
-  clearValue() {
-    this.setState({ search: "" });
-  }
   handlePageChange(pageNumber) {
     const offset = (pageNumber - 1) * this.state.limit;
     this.setState({
       page: pageNumber,
       offset: offset
     });
-    setTimeout(() => { this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: offset }, 10) });
+    setTimeout(() => { this.getDocs(this.props.getUserDocument, { limit: this.state.limit, offset: offset }) }, 10);
   }
   /**
   * Process the form.
@@ -124,10 +116,10 @@ class PublicDocs extends React.Component {
   render() {
 
     const { documents, tileData } = this.state;
-    if (documents.length > 0) {
+    // if (documents.length > 0) {
       return (
-        <div id="root" style={styles.root}>
-          <div id="pagination">
+        <div style={styles.root}>
+          <div>
             <Pagination
               total={Math.ceil(this.state.total / this.state.limit)}
               current={this.state.page}
@@ -138,17 +130,17 @@ class PublicDocs extends React.Component {
 
           <div className="field-line">
             <TextField
-              id="field"
               floatingLabelText="Search"
               name="search"
               onChange={this.onChange}
+              value={this.state.search}
             />
-            <FlatButton id="search" onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
-            <FlatButton id="reset" onTouchTap={() =>
-              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
+            <FlatButton onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
+            <FlatButton onTouchTap={() =>
+              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, "set"))
+            } label="Reset" />
           </div>
           <GridList
-            id="gridlist"
             cellHeight={230}
             style={styles.gridList}
             cols={4}
@@ -160,7 +152,6 @@ class PublicDocs extends React.Component {
                 key={index}
                 title={tile.title}
                 subtitle={<span>by <b>{tile.author}</b></span>}
-                actionIcon={<IconButton onTouchTap={this.props.onSelectTab.bind(this, tile)}><StarBorder color="white" /><i className="material-icons">add</i></IconButton>}
                 titleStyle={styles.titleStyle}
               >
 
@@ -175,47 +166,24 @@ class PublicDocs extends React.Component {
             ))}
           </GridList>
         </div>
-
       )
-    } else {
-      return (
-        <div id="noDocument" style={styles.root}>
-          <div id="pagination">
-            <Pagination
-              total={Math.ceil(this.state.total / this.state.limit)}
-              current={this.state.page}
-              display={this.state.display}
-              onChange={this.handlePageChange}
-            />
-          </div>
-
-          <div className="field-line">
-            <TextField
-              id="field"
-              floatingLabelText="Search"
-              name="search"
-              onChange={this.onChange}
-            />
-            <FlatButton id="search" onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
-            <FlatButton id="reset" onTouchTap={() =>
-              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
-          </div>
-          <div style={{ width: '57%' }}>
-            <hr />
-            <p>No document Found </p>
-          </div>
-        </div>
-      )
-    }
+    // else {
+    //   return (
+    //     <div>
+    //       <p>No documents</p>
+    //     </div>
+    //   )
+    // }
   }
 }
 
 const storeToProps = (state) => {
   return {
-    documents: state.getDocuments
+    documents: state.getDocuments,
+    userId: state.auth.user.userId
   }
 }
 
 
 
-export default connect(storeToProps, { getPublicDocs, searchDocument })(PublicDocs);
+export default connect(storeToProps, { getUserDocument})(UserDocument);
