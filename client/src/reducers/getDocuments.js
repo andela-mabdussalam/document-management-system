@@ -1,4 +1,4 @@
-import { GET_PUBLIC_DOCUMENTS , GET_DOCUMENT,CREATE_DOCUMENT } from '../actions/types';
+import { GET_PUBLIC_DOCUMENTS , GET_DOCUMENT,CREATE_DOCUMENT, GET_USER_DOCUMENTS } from '../actions/types';
 import isEmpty from 'lodash/isEmpty';
 
 export default (state = [], action) => {
@@ -9,8 +9,13 @@ export default (state = [], action) => {
   case GET_DOCUMENT:
      return Object.assign({currentDoc: action.document}, state);
 
+  case GET_USER_DOCUMENTS:
+        return Object.assign({userDocument: action.document}, state);
+
   case CREATE_DOCUMENT:
-       return [...state, Object.assign({}, action.document)];
+      var docsLen = Object.keys(state[0]).length;
+       var UpDocs = { [docsLen]: action.document };
+       return [Object.assign({}, state[0], UpDocs)];
       default: return state;
   }
 }

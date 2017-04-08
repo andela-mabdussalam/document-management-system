@@ -1,9 +1,12 @@
 // import supertest from 'supertest';
 // import { expect } from 'chai';
-// import server from '../../config/bin/server';
+// import createdServer from '../../config/bin/server';
 // import helper from '../helper';
 // import DB from '../../models/';
+// import testserver from '../../config/bin/testServer';
 
+
+// let server = supertest(createdServer);
 // let newUser, newAdmin, badRole, adminsToken, userToken, userId,
 //   secondUser, secondUserId, secondUsertoken;
 
@@ -22,7 +25,7 @@
 
 //   describe('Create User', () => {
 //     it('should create a new Admin', (done) => {
-//       supertest(server)
+//       server
 //         .post('/api/users/signup')
 //         .send(newAdmin)
 //         .end((err, res) => {
@@ -32,7 +35,7 @@
 //         });
 //     });
 //     it('should create a new User', (done) => {
-//       supertest(server)
+//       server
 //         .post('/api/users/signup')
 //         .send(newUser)
 //         .end((err, res) => {
@@ -43,7 +46,7 @@
 //         });
 //     });
 //     it('should create a second User', (done) => {
-//       supertest(server)
+//       server
 //         .post('/api/users/signup')
 //         .send(secondUser)
 //         .end((err, res) => {
@@ -54,7 +57,7 @@
 //         });
 //     });
 //     it('should create unique users', (done) => {
-//       supertest(server)
+//       server
 //         .post('/api/users/signup')
 //         .send(newUser)
 //         .end((err, res) => {
@@ -250,4 +253,3 @@
 //     });
 //   });
 // });
-

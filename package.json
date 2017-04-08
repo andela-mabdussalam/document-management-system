@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "e2e": "node_modules/.bin/nightwatch --config nightwatch.conf.js",
     "db": "NODE_ENV=test babel-node setup",
     "test:frontend": "mocha --compilers js:babel-register --require .client/tests/helper.js --require .client/tests/dom.js --recursive",
     "tdd": "npm run test:frontend -- --watch",
-    "start": "babel-watch ./server/config/bin/server.js",
+    "start": "babel-node ./server/config/bin/server.js",
     "test": "NODE_ENV=test babel-node ./node_modules/mocha/bin/_mocha -- server/test/**/*.spec.js"
   },
   "repository": {
@@ -32,12 +33,14 @@
     "gulp": "^3.9.1",
     "jquery": "2.2.3",
     "mocha": "^3.2.0",
+    "nightwatch": "^0.9.14",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "15.0.2",
     "react-redux": "4.4.5",
     "react-router": "2.4.0",
     "react-router-redux": "4.0.4",
     "redux-thunk": "2.0.1",
+    "selenium-download": "^2.0.9",
     "sinon": "^2.1.0",
     "toastr": "2.1.2"
   },
@@ -64,6 +67,7 @@
     "cross-env": "1.0.7",
     "css-loader": "0.23.1",
     "dotenv": "^4.0.0",
+    "env2": "^2.1.1",
     "enzyme": "2.2.0",
     "eslint": "^3.18.0",
     "eslint-config-airbnb-base": "^11.1.0",

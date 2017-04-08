@@ -1,4 +1,4 @@
-import users from './controller/Users';
+import users from './controller/users';
 import roles from './controller/roles';
 import document from './controller/documents';
 
@@ -23,7 +23,7 @@ const routes = (router, authenticate) => {
 
   // Route to create a role
   router.route('/roles')
-    .post(roles.create)
+    .post(authenticate.verifyToken, authenticate.isAdmin, roles.create)
     .get(authenticate.verifyToken, authenticate.isAdmin, roles.getAllRoles);
 
   router.route('/roles/:id')
@@ -42,16 +42,9 @@ const routes = (router, authenticate) => {
 
   router.route('/documents/search')
      .post(authenticate.verifyToken, document.search);
-  // router.post('/roles', authenticate.verifyToken, authenticate.isAdmin, roles.create);
-  // router.route('/users/:id')
-  //   .get(validate.validateToken, userService.getUser)
-  //   .put(validate.validateToken, userService.updateUser)
-  //   .delete(validate.validateAdmin, userService.deleteUser);
-  //   router.post('/roles/create', roles.create);
-  // router
-  //   .route('/documents')
-  //   .post(authenticate.verifyToken, document.create)
-  //   .get(authenticate.verifyToken, authenticate.viewPermission, document.getAll);
+
+  router.route('/user/:id/document')
+        .get(document.getDocsForUser);
 };
 
 

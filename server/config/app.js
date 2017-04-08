@@ -9,11 +9,10 @@ import path from 'path';
 import authenticate from './middlewares/authentication';
 
 
-import config from '../../webpack.config';
+import config from '../../webpack.config.prod';
 // const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-
 
 // Set up the express app
 const app = express();
