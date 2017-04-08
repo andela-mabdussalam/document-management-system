@@ -26,6 +26,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 
 app.use(require('webpack-hot-middleware')(compiler));
+app.use(express.static(path.resolve('dist')));
 
 // Log requests to the console.
 app.use(logger('dev'));
