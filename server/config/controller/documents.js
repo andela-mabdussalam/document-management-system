@@ -130,7 +130,7 @@ const documents = {
         });
       } else {
         console.log("8=((88*****************************************))222222222222");
-        DB.Documents.findAll({
+        DB.Documents.findAndCountAll({
           where: {
             $or: [{
               access: 'public',
@@ -151,8 +151,7 @@ const documents = {
             return res.status(404).json({ message: 'No document found' });
           }
           console.log(results[0].User.userName, " Doc User");
-          DB.Users.findById()
-          return res.status(200).json(results);
+          return res.status(200).json({ result: [...result.rows, {count: result.count}], message: userId });
         });
       }
     });
@@ -204,6 +203,7 @@ const documents = {
   * @returns {Object} - Returns response object
   */
   update(req, res) {
+    console.log('getting to the update statement---------------');
     const docId = req.params.id;
     const userId = req.token.userId;
     DB.Documents.findById(docId).then((results) => {
@@ -249,42 +249,25 @@ const documents = {
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  getDocsForUser(req, res) {// refactor this by calling getd
-    const queryId = req.params.id;
-    const ownerId = req.decoded.userId;
-    const roleId = req.decoded.RoleId;
-    DB.Roles.finDById(roleId).then((role) => {
-      if (role) {
-        if (ownerId === queryId || role.title === 'admin') {
-          DB.Document.findAll({
-            where: {
-              ownerId: queryId
-            }
-          }).then((docs) => {
-            if (docs < 1) {
-              return res.status(404).json({ message: 'No documents found' });
-            }
-            const results = docs;
-            return res.status(200).json(results);
+  getDocsForUser(req, res){
+    console.log('i get here ---------------------------- ');
+    DB.Documents.findAll({
+         where: { ownerId: req.params.id},
+         include: [{
+              model: DB.Users,
+              attributes: ['userName']
+            }]
+          }).then((results) => {
+      if (!results) {
+        return res.status(404)
+          .send({
+            message: `No Document(s) found for user with ID
+            ${request.params.id}`
           });
-        } else {
-          DB.Documents.findAll({
-            where: {
-              ownerId: queryId,
-              $and: {
-                access: 'public'
-              }
-            }
-          }).then((docs) => {
-            if (docs < 1) {
-              return res.status(404).json({ message: 'No documents found' });
-            }
-            const results = docs;
-            return res.status(200).json(results);
-          });
-        }
       }
+      return res.status(200).json({ result: results});
     });
+
   },
 
   search(request, response) {

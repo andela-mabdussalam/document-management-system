@@ -23,7 +23,7 @@ const routes = (router, authenticate) => {
 
   // Route to create a role
   router.route('/roles')
-    .post(roles.create)
+    .post(authenticate.verifyToken, authenticate.isAdmin, roles.create)
     .get(authenticate.verifyToken, authenticate.isAdmin, roles.getAllRoles);
 
   router.route('/roles/:id')
@@ -42,6 +42,9 @@ const routes = (router, authenticate) => {
 
   router.route('/documents/search')
      .post(authenticate.verifyToken, document.search);
+
+  router.route('/user/:id/document')
+        .get(document.getDocsForUser);
   // router.post('/roles', authenticate.verifyToken, authenticate.isAdmin, roles.create);
   // router.route('/users/:id')
   //   .get(validate.validateToken, userService.getUser)
