@@ -45,16 +45,6 @@ const routes = (router, authenticate) => {
 
   router.route('/user/:id/document')
         .get(document.getDocsForUser);
-  // router.post('/roles', authenticate.verifyToken, authenticate.isAdmin, roles.create);
-  // router.route('/users/:id')
-  //   .get(validate.validateToken, userService.getUser)
-  //   .put(validate.validateToken, userService.updateUser)
-  //   .delete(validate.validateAdmin, userService.deleteUser);
-  //   router.post('/roles/create', roles.create);
-  // router
-  //   .route('/documents')
-  //   .post(authenticate.verifyToken, document.create)
-  //   .get(authenticate.verifyToken, authenticate.viewPermission, document.getAll);
 };
 
 
