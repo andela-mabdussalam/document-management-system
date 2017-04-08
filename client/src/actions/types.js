@@ -11,3 +11,5 @@ export const DELETE_USER = 'DELETE_USER';
 export const CREATE_USER = 'CREATE_USER';
 export const GET_ROLES = 'GET_ROLES';
 export const CREATE_ROLE = 'CREATE_ROLE';
+export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT';
+export const GET_USER_DOCUMENTS = 'GET_USER_DOCUMENTS';
