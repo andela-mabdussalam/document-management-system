@@ -1,4 +1,4 @@
-import users from './controller/Users';
+import users from './controller/users';
 import roles from './controller/roles';
 import document from './controller/documents';
 
