@@ -1,21 +1,23 @@
 import webpack from 'webpack';
 import path from 'path';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-
-const GLOBALS = {
-  'process.env.NODE_ENV': JSON.stringify('production')
-};
 
 export default {
-  devtool: 'cheap-module-eval-source-map',
-  entry: {
-    bundle: path.resolve(__dirname, 'client/index')
-  },
+  debug: true,
+  devtool: 'inline-source-map',
+  noInfo: false,
+  entry: [
+    'eventsource-polyfill', // necessary for hot reloading with IE
+    path.resolve(__dirname, 'client/src')
+  ],
   target: 'web',
   output: {
-    path: `${__dirname}/dist`,
+    path: __dirname + '/dist', // Note: Physical files are only output by the production build task `npm run build`.
     publicPath: '/',
-    filename: '[name].js'
+    filename: 'bundle.js'
+  },
+  devServer: {
+    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, 'client/src')
   },
   resolve: {
     alias: {
@@ -23,59 +25,48 @@ export default {
     }
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.DefinePlugin(GLOBALS),
-    new ExtractTextPlugin('styles.css'),
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
+      $: "jquery",
+      jQuery: "jquery",
       'window.jQuery': 'jquery',
       Hammer: 'hammerjs/hammer'
     })
   ],
-
   module: {
     loaders: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loaders: ['babel']
+        test: /\.js$/, include:
+          [
+            path.join(__dirname, 'client/src'),
+            path.join(__dirname, 'server/shared'),
+          ]
+        , loaders: ['babel']
       },
+
+      { test: /(\.css)$/, loaders: ['style', 'css'] },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=5000' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
       {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader'
+        test: /\.json$/,
+        loader: "json-loader",
       },
+      { test: /materialize-css\/bin\//, loader: 'imports?jquery,$=jquery,hammerjs' },
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=application/font-woff'
+        loader: "url?limit=10000&mimetype=application/font-woff"
       },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=application/font-woff'
+        loader: "url?limit=10000&mimetype=application/font-woff"
       },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=application/octet-stream'
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=image/svg+xml'
-      }, {
-        test: /\.(jpg|png|svg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 25000,
-        },
-      }, {
-        test: /materialize-css\/bin\//,
-        loader: 'imports?jQuery=jquery,$=jquery,hammerjs'
-      }, {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('css?sourceMap')
-      }
+      { test: /\.(jpg|png|svg)$/, loader: 'url-loader', options: { limit: 25000, }, }
     ]
+  },
+  node: {
+    net: 'empty',
+    dns: 'empty'
   }
 };

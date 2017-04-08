@@ -14,7 +14,6 @@ import config from '../../webpack.config.prod';
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
-
 // Set up the express app
 const app = express();
 const router = express.Router();
