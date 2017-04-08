@@ -7,7 +7,7 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "mariamabdussalam",
+    "username": "postgres",
     "password": "",
     "database": "doc-mgt-test",
     "host": "127.0.0.1",
