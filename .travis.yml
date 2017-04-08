@@ -11,7 +11,7 @@ services:
 - postgresql
 
 before_script:
-- psql -c 'create database doc_mgt_test;' -U postgres
+- psql -c 'create database doc_mgt_test;' -U mariamabdussalam
 
 script:
 - npm test
