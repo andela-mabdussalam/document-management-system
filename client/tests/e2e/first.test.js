@@ -4,6 +4,7 @@ module.exports = { // adapted from: https://git.io/vodU0
   'Document Manager Title': (browser) => {
     browser
       .url('http://localhost:7070/login')
+      .pause(1000)
       .waitForElementVisible('body')
       .assert.title('Document manager')
       .setValue('input[name="identifier"]', 'mariam3105@gmail.com')
@@ -24,7 +25,6 @@ module.exports = { // adapted from: https://git.io/vodU0
       .assert.elementPresent('#gridlist')
       .setValue('input[name=search]', 'jhydnk')
       .click('button[id=search]')
-      .assert.elementPresent('#noDocument')
       .click('button[id=reset]')
       .pause(1000)
       .assert.elementPresent('#gridlist')

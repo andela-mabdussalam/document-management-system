@@ -193,13 +193,11 @@ describe('ROLE API', () => {
     });
   });
   describe('USERS', () => {
-    console.log('uesr', anotherUser);
     before((done) => {
       supertest(testserver)
         .post('/api/users/signup')
         .send(anotherUser)
         .end((err, res) => {
-          console.log('response', res.error);
           userToken = res.body.token;
           expect(res.status).to.equal(201);
           done();
@@ -207,7 +205,6 @@ describe('ROLE API', () => {
     });
 
     it('Should not be able to create new role', (done) => {
-      console.log(userToken);
       supertest(testserver)
         .post('/api/roles')
         .set('authorization', userToken)

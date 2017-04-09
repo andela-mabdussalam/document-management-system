@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+// import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Router, Route } from 'react-router-dom';
@@ -6,7 +6,6 @@ import routes from './routes';
 import setAuthorizationToken from './utils/setAuthorizationToken';
 import jwt from 'jsonwebtoken';
 import { setCurrentUser } from './actions/authActions';
-import './styles/styles.css';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -19,7 +18,7 @@ import SignUpPage from './components/home/signUpPage';
 import TabsExampleControlled from './components/document/Dashboard';
 import ViewDoc from './components/document/ViewDoc';
 import NewDocument from './components/document/NewDocument';
-
+import './styles/styles.css';
 
 const store = createStore(
   rootReducer,

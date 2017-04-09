@@ -101,7 +101,7 @@ class LoginForm extends React.Component {
           type="password"
         />
     </div>
-    <RaisedButton disabled={ isLoading} type="submit" label="Create New Account" name="action" primary />
+    <RaisedButton disabled={ isLoading} type="submit" label="Log In" name="action" primary />
       </form>
     </Card>
     )

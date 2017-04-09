@@ -62,7 +62,6 @@ class ManageUsers extends React.Component {
         this.setState({ users: this.props.users, total: count.count });
         let elements = this.state.users;
       }, (error) => {
-        // console.log("Mariam Error", error.response.data.message)
       });
   }
   handleOpen(selectedUser) {
@@ -96,7 +95,6 @@ class ManageUsers extends React.Component {
           newUser: {}
         }));
       }, (error) => {
-        // console.log("Mariam Error", error.response.data.message)
       });
     this.setState({ open: false });
 

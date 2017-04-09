@@ -13,7 +13,7 @@ import {createNewDoc} from '../../actions/publicDocs';
 import 'froala-editor/js/froala_editor.pkgd.min';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'font-awesome/css/font-awesome.css';
+import 'font-awesome/css/font-awesome.css'
 import FroalaEditor from 'react-froala-wysiwyg';
 import toastr from 'toastr';
 const items = [
@@ -93,11 +93,6 @@ createDoc(){
     newDocument.title = event.target.value;
     newDocument.ownerId = this.props.ownerId;
     this.setState({ [event.target.name]: event.target.value });
-    // console.log('jade');
-    // const newDocument = this.state.newDocument;
-    // console.log('the event is',event.target.name, event.target.value );
-    // newDocument[event.target.name] = event.target.value;
-    // this.setState({newDocument: newDocument});
   }
   }
   handleModelChange(model){
@@ -109,8 +104,7 @@ createDoc(){
   }
   else{
     const newDocument = this.state.newDocument;
-    newDocument.content = model
-    // this.setState({newDocument: Object.assign({}, newDocument)});
+    newDocument.content = model;
   }
   }
   updateDoc(){
@@ -145,13 +139,13 @@ createDoc(){
          onModelChange={this.handleModelChange}
          />
 
-       {docId && <div><p>SELECT TYPE/ACCESS {docId}</p>
+       {!docId && <div><p>SELECT TYPE/ACCESS</p>
            <SelectField
               name="access"
               value={value}
               onChange={this.handleChange}
               floatingLabelText="Select a role for the document"
-              >
+              >{items}
           </SelectField></div> }
 
             {!docId && <RaisedButton onTouchTap={this.createDoc} label="Create Document" primary />}

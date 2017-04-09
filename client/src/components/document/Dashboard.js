@@ -1,13 +1,16 @@
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import PublicDocs from './PublicDocs';
 import NewDocument from './NewDocument';
 import ManageUsers from './ManageUsers';
 import UserDocument from './UserDocument';
 import Roles from '../Roles/Roles';
-import {blue500, lightBlue900, purple50, grey50, teal500, brown500, brown600} from 'material-ui/styles/colors';
+import {
+  blue500, lightBlue900, purple50, grey50,
+  teal500, brown500, brown600
+} from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 
 const styles = {
@@ -19,7 +22,7 @@ const styles = {
   },
 };
 
- class TabsExampleControlled extends React.Component {
+class TabsExampleControlled extends React.Component {
 
   constructor(props) {
     super(props);
@@ -45,14 +48,17 @@ const styles = {
   }
 
   render() {
-    const {isAdmin} = this.props;
+    const { isAdmin } = this.props;
     return (
       <Tabs
         value={this.state.value}
         onChange={this.handleChange}
-        tabItemContainerStyle={{width: '800px'}}
+        tabItemContainerStyle={{ width: '800px' }}
       >
-        <Tab label="Home" id="home" value="a" style={{backgroundColor: grey50, color:'black'}}>
+        <Tab label="Home" id="home" value="a" style={{
+          backgroundColor: grey50,
+          color: 'black'
+        }}>
           <div className="spacer"></div>
           <div>
 
@@ -60,24 +66,28 @@ const styles = {
 
           </div>
         </Tab>
-        <Tab label="My Documents" id="myDocument" value="b" style={{backgroundColor: grey50, color:'black'}}>
+        <Tab label="My Documents" id="myDocument" value="b"
+          style={{ backgroundColor: grey50, color: 'black' }}>
           <div>
             <h2 id="help" style={styles.headline}>My Documents</h2>
             <UserDocument />
           </div>
         </Tab>
-        <Tab label="Create Documents" id="createDocument" value="c" style={{backgroundColor: grey50, color:'black'}}>
+        <Tab label="Create Documents" id="createDocument" value="c"
+          style={{ backgroundColor: grey50, color: 'black' }}>
           <div>
-            <NewDocument tile={this.state.tile}  />
+            <NewDocument tile={this.state.tile} />
           </div>
         </Tab>
         {isAdmin &&
-        <Tab label="Manage Users" id="manageUsers" value="d" style={{backgroundColor: grey50, color:'black'}}>
-          <div>
-            <ManageUsers />
-          </div>
-        </Tab>}
-        {isAdmin && <Tab label="Manage Roles" id="manageRoles" value="e" style={{backgroundColor: grey50, color:'black'}}>
+          <Tab label="Manage Users" id="manageUsers" value="d"
+            style={{ backgroundColor: grey50, color: 'black' }}>
+            <div>
+              <ManageUsers />
+            </div>
+          </Tab>}
+        {isAdmin && <Tab label="Manage Roles" id="manageRoles"
+          value="e" style={{ backgroundColor: grey50, color: 'black' }}>
           <div>
             <Roles />
           </div>
@@ -88,11 +98,11 @@ const styles = {
 }
 const storeToProps = (state, ownProps) => {
   let isAdmin;
-  if (state.auth.user.userRoleId === 1){
+  if (state.auth.user.userRoleId === 1) {
     isAdmin = true;
   }
   return {
-     isAdmin: isAdmin
+    isAdmin: isAdmin
   }
 }
 export default connect(storeToProps)(TabsExampleControlled)
