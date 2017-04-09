@@ -9,7 +9,7 @@ import path from 'path';
 import authenticate from './middlewares/authentication';
 
 import compression from 'compression';
-import config from '../../webpack.config';
+import config from '../../webpack.config.prod';
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
