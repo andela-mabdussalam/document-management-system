@@ -8,7 +8,7 @@
     "db": "NODE_ENV=test babel-node setup",
     "test:frontend": "mocha --compilers js:babel-register --require .client/tests/helper.js --require .client/tests/dom.js --recursive",
     "tdd": "npm run test:frontend -- --watch",
-    "start": "npm run build",
+    "start": "npm run postbuild",
     "start:dev": "babel-node ./server/config/bin/server.js ",
     "test": "NODE_ENV=test babel-node ./node_modules/mocha/bin/_mocha -- server/test/**/*.spec.js",
     "clean-dist": "npm run remove-dist && mkdir dist",
