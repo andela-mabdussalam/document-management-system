@@ -9,7 +9,6 @@ const GLOBALS = {
 export default {
     debug: true,
     devtool: 'source-map',
-    noInfo: false,
     entry: {
         bundle: path.resolve(__dirname, 'client/src/index'),
     },
