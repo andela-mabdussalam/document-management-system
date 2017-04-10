@@ -105,8 +105,6 @@ describe('USER MODEL', () => {
       DB.Users.create(thirdUser)
         .then((createdUser) => {
           expect(createdUser.validatePassword(thirdUser.password)).to.be.true;
-        }).catch((error) => {
-          console.log('error', error);
         });
     });
   });

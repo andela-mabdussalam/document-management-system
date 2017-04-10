@@ -8,10 +8,10 @@ const requiredFields = ['title', 'content', 'OwnerId', 'access'];
 const documentParams = helper.createDocument();
 const docs = helper.createDocument();
 const userParams = helper.testUser();
-describe('Document Model', () => {
+describe('Document Model', function () {
+  this.timeout(30000);
   let createdDocument;
   let owner;
-
   before((done) => {
     DB.sequelize.sync({ force: true }).then(() => {
       DB.Roles.create(helper.regularRole())
