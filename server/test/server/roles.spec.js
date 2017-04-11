@@ -4,7 +4,7 @@ import testserver from '../../config/bin/testServer';
 import helper from '../helper';
 import DB from '../../models/';
 
-describe('ROLE API', function() {
+describe('ROLE API', function () {
   this.timeout(30000);
   const userDetail = helper.testUser();
   const anotherUser = helper.createUser();
@@ -242,6 +242,5 @@ describe('ROLE API', function() {
           done();
         });
     });
-
   });
 });

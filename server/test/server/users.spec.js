@@ -3,19 +3,17 @@ import { expect } from 'chai';
 import createdServer from '../../config/bin/server';
 import helper from '../helper';
 import DB from '../../models/';
-import testserver from '../../config/bin/testServer';
 
 
-let server = supertest(createdServer);
+const server = supertest(createdServer);
 
 
 describe('USER API', function () {
   this.timeout(30000);
-  let badRole, adminsToken, userToken, userId,
-    secondUserId, secondUsertoken;
-  let newAdmin = helper.createAdmin();
-  let newUser = helper.createUser();
-  let secondUser = helper.createUser();
+  let badRole, adminsToken, userToken, userId, secondUsertoken;
+  const newAdmin = helper.createAdmin();
+  const newUser = helper.createUser();
+  const secondUser = helper.createUser();
 
   before((done) => {
     DB.Roles.create({ title: 'admin' });

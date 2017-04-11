@@ -76,7 +76,7 @@ export function createNewDoc(docData) {
       });
   };
 }
-export function updateDocument(docData, index) {
+export function updateDocument(docData) {
   return (dispatch) => {
     return axios.put(`/api/documents/${docData.id}`, docData)
       .then((response) => {
@@ -95,7 +95,7 @@ export function viewDoc(id) {
 export function deleteDocument(id) {
   return (dispatch) => {
     return axios.delete(`/api/documents/${id}`)
-      .then((response) => {
+      .then(() => {
         return dispatch(getPublicDocs({ limit: 40, offset: 0 }));
       });
   };
