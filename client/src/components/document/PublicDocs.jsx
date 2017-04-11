@@ -99,7 +99,8 @@ class PublicDocs extends React.Component {
       });
   }
   componentWillMount() {
-    this.getDocs(this.props.getPublicDocs, { offset: this.state.offset, limit: this.state.limit });
+    this.getDocs(this.props.getPublicDocs,
+    { offset: this.state.offset, limit: this.state.limit });
   }
   deleteDocument() {
     const { document } = this.state;
@@ -108,8 +109,10 @@ class PublicDocs extends React.Component {
   viewDocument() {
     const { document } = this.state
     const actions = [
-      <FlatButton label="Cancel" primary={true} onTouchTap={this.handleCreateClose} />,
-      <FlatButton label="Delete" primary={true} onTouchTap={this.deleteDocument} />
+      <FlatButton label="Cancel" primary={true}
+      onTouchTap={this.handleCreateClose} />,
+      <FlatButton label="Delete" primary={true}
+      onTouchTap={this.deleteDocument} />
     ];
     return (
       <div>
@@ -143,7 +146,8 @@ class PublicDocs extends React.Component {
       page: pageNumber,
       offset: offset
     });
-    setTimeout(() => { this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: offset }, 10) });
+    setTimeout(() => { this.getDocs(this.props.getPublicDocs,
+       { limit: this.state.limit, offset: offset }, 10) });
   }
   /**
   * Process the form.
@@ -177,9 +181,12 @@ class PublicDocs extends React.Component {
               name="search"
               onChange={this.onChange}
             />
-            <FlatButton id="search" onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
+            <FlatButton id="search" onTouchTap={() =>
+              (this.getDocs(this.props.searchDocument, this.state.search))}
+               label="Search" />
             <FlatButton id="reset" onTouchTap={() =>
-              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
+              (this.getDocs(this.props.getPublicDocs,
+               { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
           </div>
           <GridList
             id="gridlist"
@@ -196,7 +203,8 @@ class PublicDocs extends React.Component {
                 title={document.title}
                 subtitle={<span>by <b>{document.User.userName}</b></span>}
                 actionIcon={
-                  <IconButton onTouchTap={this.props.onSelectTab.bind(this, document, index)}
+                  <IconButton
+                  onTouchTap={this.props.onSelectTab.bind(this, document, index)}
                   tooltip="Edit Document" tooltipPosition="top-left">
                   <i className="material-icons orange600">add</i>
                   </IconButton>
@@ -204,9 +212,13 @@ class PublicDocs extends React.Component {
                 titleStyle={styles.titleStyle}
               >
                <div className="row">
-                <RaisedButton onTouchTap={() => this.handleOpen(document)} label="View Document" style={{width: '60%'}} backgroundColor="#EFEBE9">
+                <RaisedButton onTouchTap={() => this.handleOpen(document)}
+                  label="View Document" style={{width: '60%'}}
+                  backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">explore</i>
-                </RaisedButton> <RaisedButton onTouchTap={() => this.handleOpen(document)} label="Delete" style={{width: '35%'}}backgroundColor="#EFEBE9">
+                </RaisedButton>
+                <RaisedButton onTouchTap={() => this.handleOpen(document)}
+                  label="Delete" style={{width: '35%'}}backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">delete</i>
                 </RaisedButton>
                 </div>
@@ -244,9 +256,11 @@ class PublicDocs extends React.Component {
               name="search"
               onChange={this.onChange}
             />
-            <FlatButton id="search" onTouchTap={() => (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
+            <FlatButton id="search" onTouchTap={() =>
+              (this.getDocs(this.props.searchDocument, this.state.search))} label="Search" />
             <FlatButton id="reset" onTouchTap={() =>
-              (this.getDocs(this.props.getPublicDocs, { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
+              (this.getDocs(this.props.getPublicDocs,
+              { limit: this.state.limit, offset: this.state.offset }, 1))} label="Reset" />
           </div>
           <div style={{ width: '57%' }}>
             <hr />
@@ -266,4 +280,4 @@ const storeToProps = (state) => {
 
 
 
-export default connect(storeToProps, { getPublicDocs, searchDocument , deleteDocument})(PublicDocs);
+export default connect(storeToProps, { getPublicDocs, searchDocument, deleteDocument})(PublicDocs);
