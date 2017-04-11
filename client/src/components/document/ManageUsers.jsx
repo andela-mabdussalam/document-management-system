@@ -103,7 +103,6 @@ class ManageUsers extends React.Component {
     this.createDialog();
   }
   deleteUser(selectedUser) {
-    console.log('selecteduser is', selectedUser.id);
     this.props.deleteUser(selectedUser);
   }
 

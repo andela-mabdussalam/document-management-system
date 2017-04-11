@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPublicDocs, searchDocument } from '../../actions/publicDocs';
+import { getPublicDocs, searchDocument, deleteDocument } from '../../actions/publicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ const styles = {
     justifyContent: 'space-around',
   },
   gridList: {
-    width: 1200,
+    width: 1500,
     overflowY: 'auto',
 
   },
@@ -49,7 +49,7 @@ class PublicDocs extends React.Component {
     this.state = {
       documents: [],
       tileData: [],
-      limit: 15,
+      limit: 40,
       page: 1,
       offset: 0,
       total: 0,
@@ -68,18 +68,16 @@ class PublicDocs extends React.Component {
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleCreateClose = this.handleCreateClose.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
   }
   onChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state);
   }
 
   getDocs(actionToCall, params, set) {
-    console.log('params is', set);
     if (set === 1) {
       $('#field').val("");
     }
-    console.log('set is', set);
     actionToCall(params)
       .then((response) => {
         const count = response.documents.pop();
@@ -103,13 +101,15 @@ class PublicDocs extends React.Component {
   componentWillMount() {
     this.getDocs(this.props.getPublicDocs, { offset: this.state.offset, limit: this.state.limit });
   }
-
+  deleteDocument() {
+    const { document } = this.state;
+  }
 
   viewDocument() {
     const { document } = this.state
-    console.log('document is', document);
     const actions = [
-      <FlatButton label="Cancel" primary={true} onTouchTap={this.handleCreateClose} />
+      <FlatButton label="Cancel" primary={true} onTouchTap={this.handleCreateClose} />,
+      <FlatButton label="Delete" primary={true} onTouchTap={this.deleteDocument} />
     ];
     return (
       <div>
@@ -156,8 +156,9 @@ class PublicDocs extends React.Component {
   */
   render() {
 
-    const { documents, tileData } = this.state;
-    if (documents.length > 0) {
+    const { documents } = this.props;
+    if (documents.items) {
+
       return (
         <div id="root" style={styles.root}>
           <div id="pagination">
@@ -182,31 +183,43 @@ class PublicDocs extends React.Component {
           </div>
           <GridList
             id="gridlist"
-            cellHeight={230}
+            cellHeight={290}
             style={styles.gridList}
             cols={4}
-            padding={14}
+            padding={25}
           >
 
-            {tileData.map((tile, index) => (
-              <GridTile
+            {documents.items.map((document, index) => {
+              return (
+                <GridTile
                 key={index}
-                title={tile.title}
-                subtitle={<span>by <b>{tile.author}</b></span>}
-                actionIcon={<IconButton onTouchTap={this.props.onSelectTab.bind(this, tile)} tooltip="Edit Document" tooltipPosition="top-left"><i className="material-icons orange600">add</i></IconButton>}
+                title={document.title}
+                subtitle={<span>by <b>{document.User.userName}</b></span>}
+                actionIcon={
+                  <IconButton onTouchTap={this.props.onSelectTab.bind(this, document, index)}
+                  tooltip="Edit Document" tooltipPosition="top-left">
+                  <i className="material-icons orange600">add</i>
+                  </IconButton>
+                }
                 titleStyle={styles.titleStyle}
               >
-
-                <RaisedButton onTouchTap={() => this.handleOpen(tile)} label="View Document" fullWidth={true} backgroundColor="#EFEBE9">
+               <div className="row">
+                <RaisedButton onTouchTap={() => this.handleOpen(document)} label="View Document" style={{width: '60%'}} backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">explore</i>
+                </RaisedButton> <RaisedButton onTouchTap={() => this.handleOpen(document)} label="Delete" style={{width: '35%'}}backgroundColor="#EFEBE9">
+                  <i className="material-icons orange600">delete</i>
                 </RaisedButton>
+                </div>
 
                 <hr />
                 <div id="onboard">
-                  {renderHTML(tile.content)}
+                  {renderHTML(document.content)}
                 </div>
               </GridTile>
-            ))}
+              )
+            }
+
+            )}
             {this.viewDocument()}
           </GridList>
         </div>
@@ -253,4 +266,4 @@ const storeToProps = (state) => {
 
 
 
-export default connect(storeToProps, { getPublicDocs, searchDocument })(PublicDocs);
+export default connect(storeToProps, { getPublicDocs, searchDocument , deleteDocument})(PublicDocs);

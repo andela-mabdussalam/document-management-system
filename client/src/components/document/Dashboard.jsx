@@ -2,11 +2,11 @@ import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 import { Tabs, Tab } from 'material-ui/Tabs';
-import PublicDocs from './PublicDocs';
-import NewDocument from './NewDocument';
-import ManageUsers from './ManageUsers';
-import UserDocument from './UserDocument';
-import Roles from '../Roles/Roles';
+import PublicDocs from './PublicDocs.jsx';
+import NewDocument from './NewDocument.jsx';
+import ManageUsers from './ManageUsers.jsx';
+import UserDocument from './UserDocument.jsx';
+import Roles from '../Roles/Roles.jsx';
 import {
   blue500, lightBlue900, purple50, grey50,
   teal500, brown500, brown600
@@ -76,7 +76,7 @@ class TabsExampleControlled extends React.Component {
         <Tab label="Create Documents" id="createDocument" value="c"
           style={{ backgroundColor: grey50, color: 'black' }}>
           <div>
-            <NewDocument tile={this.state.tile} />
+            <NewDocument document={this.state.tile} />
           </div>
         </Tab>
         {isAdmin &&

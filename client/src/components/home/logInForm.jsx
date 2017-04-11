@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
-// import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from '../../../../server/shared/validations/login';
 import { login } from '../../actions/authActions';
 import { Card, CardText } from 'material-ui/Card';

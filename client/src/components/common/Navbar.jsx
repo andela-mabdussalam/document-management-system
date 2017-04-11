@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
+import { Redirect } from 'react-router-dom';
 import {blue500, lime900, teal500
 } from 'material-ui/styles/colors';
 
