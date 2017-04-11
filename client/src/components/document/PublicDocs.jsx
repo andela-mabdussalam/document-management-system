@@ -1,5 +1,8 @@
+/*eslint no-unused-vars:false */
 import React from 'react';
-import { getPublicDocs, searchDocument, deleteDocument } from '../../actions/getPublicDocs';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import { getPublicDocs, searchDocument, deleteDocument }
+from '../../actions/getPublicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -15,7 +18,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import TextField from 'material-ui/TextField';
 
 
@@ -34,9 +37,7 @@ const styles = {
     color: 'black',
   },
 };
-const iconStyles = {
-  marginRight: 24,
-};
+
 
 class PublicDocs extends React.Component {
   /**
@@ -55,8 +56,8 @@ class PublicDocs extends React.Component {
       total: 0,
       display: 7,
       number: 7,
-      name: "",
-      search: "",
+      name: '',
+      search: '',
       openCreateDialog: false,
       document: {}
     };
@@ -76,21 +77,21 @@ class PublicDocs extends React.Component {
 
   getDocs(actionToCall, params, set) {
     if (set === 1) {
-      $('#field').val("");
+      $('#field').val('');
     }
     actionToCall(params)
       .then((response) => {
         const count = response.documents.pop();
         this.setState({ documents: response.documents, total: count.count });
-        let elements = response.documents;
+        const elements = response.documents;
         const arrayr = [];
         elements.forEach((element) => {
           const obj = {
-            "img": './images/grid-list/bg1.jpg',
-            "title": element.title,
-            "author": element.User.userName,
-            "content": element.content,
-            "id": element.id
+            img: './images/grid-list/bg1.jpg',
+            title: element.title,
+            author: element.User.userName,
+            content: element.content,
+            id: element.id
           };
           arrayr.push(obj);
         });
@@ -107,7 +108,7 @@ class PublicDocs extends React.Component {
   }
 
   viewDocument() {
-    const { document } = this.state
+    const { document } = this.state;
     const actions = [
       <FlatButton label="Cancel" primary={true}
       onTouchTap={this.handleCreateClose} />,
@@ -120,34 +121,35 @@ class PublicDocs extends React.Component {
           open={this.state.openCreateDialog}
           autoScrollBodyContent={true}>
             <hr />
-            {document.title ? <div>{renderHTML(document.content)}</div> : ""}
+            {document.title ? <div>{renderHTML(document.content)}</div> : ''}
         </Dialog>
       </div>
-    )
+    );
   }
 
   clearValue() {
-    this.setState({ search: "" });
+    this.setState({ search: '' });
   }
   handleOpen(document) {
     this.setState({ openCreateDialog: true, document });
-
-  };
+  }
 
   handleClose() {
     this.setState({ open: false });
-  };
+  }
   handleCreateClose() {
     this.setState({ openCreateDialog: false });
-  };
+  }
   handlePageChange(pageNumber) {
     const offset = (pageNumber - 1) * this.state.limit;
     this.setState({
       page: pageNumber,
-      offset: offset
+      offset
     });
-    setTimeout(() => { this.getDocs(this.props.getPublicDocs,
-       { limit: this.state.limit, offset: offset }, 10) });
+    setTimeout(() => {
+      this.getDocs(this.props.getPublicDocs,
+       { limit: this.state.limit, offset }, 10);
+    });
   }
   /**
   * Process the form.
@@ -159,10 +161,8 @@ class PublicDocs extends React.Component {
   * Render the component.
   */
   render() {
-
     const { documents } = this.props;
     if (documents.items) {
-
       return (
         <div id="root" style={styles.root}>
           <div id="pagination">
@@ -213,12 +213,12 @@ class PublicDocs extends React.Component {
               >
                <div className="row">
                 <RaisedButton onTouchTap={() => this.handleOpen(document)}
-                  label="View Document" style={{width: '60%'}}
+                  label="View Document" style={{ width: '60%' }}
                   backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">explore</i>
                 </RaisedButton>
                 <RaisedButton onTouchTap={() => this.handleOpen(document)}
-                  label="Delete" style={{width: '35%'}}backgroundColor="#EFEBE9">
+                  label="Delete" style={{ width: '35%' }}backgroundColor="#EFEBE9">
                   <i className="material-icons orange600">delete</i>
                 </RaisedButton>
                 </div>
@@ -228,7 +228,7 @@ class PublicDocs extends React.Component {
                   {renderHTML(document.content)}
                 </div>
               </GridTile>
-              )
+              );
             }
 
             )}
@@ -236,9 +236,9 @@ class PublicDocs extends React.Component {
           </GridList>
         </div>
 
-      )
-    } else {
-      return (
+      );
+    }
+    return (
         <div id="noDocument" style={styles.root}>
           <div id="pagination">
             <Pagination
@@ -267,17 +267,15 @@ class PublicDocs extends React.Component {
             <p>No document Found </p>
           </div>
         </div>
-      )
-    }
+      );
   }
 }
 
 const storeToProps = (state) => {
   return {
     documents: state.getDocuments
-  }
-}
+  };
+};
 
 
-
-export default connect(storeToProps, { getPublicDocs, searchDocument, deleteDocument})(PublicDocs);
+export default connect(storeToProps, { getPublicDocs, searchDocument, deleteDocument })(PublicDocs);

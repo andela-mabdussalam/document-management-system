@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateDocument, createNewDoc } from '../../actions/getPublicDocs';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import FroalaEditor from 'react-froala-wysiwyg';
 import 'froala-editor/js/froala_editor.pkgd.min';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
-import FroalaEditor from 'react-froala-wysiwyg';
 import toastr from 'toastr';
+import { updateDocument, createNewDoc } from '../../actions/getPublicDocs';
+
 const items = [
   <MenuItem key={1} value="private" primaryText="private" />,
   <MenuItem key={2} value="public" primaryText="public" />,
@@ -42,17 +44,19 @@ class NewDocument extends React.Component {
   }
 
   handleAccessChange(event, index, value) {
-   this.setState((state) => {
-     const newDocument = Object.assign({}, state.newDocument, { access: value });
+    this.setState((state) => {
+     const newDocument = Object.assign({},
+     state.newDocument, { access: value });
      return { newDocument };
    });
- }
+  }
 
   onTitleChange(event) {
     const { name: field, value } = event.target;
     const { ownerId } = this.props;
     this.setState((state) => {
-      const newDocument = Object.assign({}, state.newDocument, { [field]: value, ownerId });
+      const newDocument = Object.assign({},
+      state.newDocument, { [field]: value, ownerId });
       return { newDocument };
     });
   }
@@ -60,17 +64,18 @@ class NewDocument extends React.Component {
   handleModelChange(model) {
     const { ownerId } = this.props;
     this.setState((state) => {
-      const newDocument = Object.assign({}, state.newDocument, { content: model, ownerId });
+      const newDocument = Object.assign({},
+      state.newDocument, { content: model, ownerId });
       return { newDocument };
     });
   }
 
   createDoc() {
-  this.props.createNewDoc(this.state.newDocument).then((response) => {
-    toastr.success('Document Successfully Created');
-    this.setState({ newDocument: {} });
-  });
-}
+    this.props.createNewDoc(this.state.newDocument).then(() => {
+      toastr.success('Document Successfully Created');
+      this.setState({ newDocument: {} });
+    });
+  }
 
   updateDoc() {
     const { newDocument } = this.state;
@@ -115,8 +120,10 @@ class NewDocument extends React.Component {
               >{items}
           </SelectField></div>
 
-            {!docId && <RaisedButton onTouchTap={this.createDoc} label="Create Document" primary />}
-            { docId && <RaisedButton onTouchTap={this.updateDoc} label="Update Document" secondary />}
+            {!docId && <RaisedButton onTouchTap={this.createDoc}
+             label="Create Document" primary />}
+            { docId && <RaisedButton onTouchTap={this.updateDoc}
+            label="Update Document" secondary />}
 
             <div className="spacer"></div>
             </div>
@@ -131,4 +138,5 @@ const storeToProps = (state, ownProps) => {
     ownerId: state.auth.user.userId
   };
 };
-export default connect(storeToProps, { createNewDoc, updateDocument })(NewDocument);
+export default connect(storeToProps,
+{ createNewDoc, updateDocument })(NewDocument);
