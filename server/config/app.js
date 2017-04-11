@@ -4,12 +4,12 @@
 
 import express from 'express';
 import webpack from 'webpack';
-import routes from './routes';
 import path from 'path';
-import authenticate from './middlewares/authentication';
-
 import compression from 'compression';
+import routes from './routes';
+import authenticate from './middlewares/authentication';
 import config from '../../webpack.config';
+
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 

@@ -6,7 +6,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import open from 'open';
-import app from '../server/app'; // express server
+import app from '../server/app.'; // express server
 import config from '../webpack.config.dev';
 
 const port = parseInt(process.env.PORT, 10) || 4000;

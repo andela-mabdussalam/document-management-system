@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
-import db from '../../models/';
-import validator from 'validator';
-import commonValidations from '../../shared/validations/signup';
 import Promise from 'bluebird';
 import isEmpty from 'lodash/isEmpty';
+import db from '../../models/';
+import commonValidations from '../../shared/validations/signup';
+
 
 const secret = process.env.JWT_SECRET_KEY || 'rawsecret';
 const userAttributes = (user) => {
@@ -65,7 +65,7 @@ class Users {
           email: data.email
         }
       }).then((returnedUser) => {
-        if (returnedUser){ errors.email = ' There is a user with such email'; }
+        if (returnedUser) { errors.email = ' There is a user with such email'; }
       }),
 
       db.Users.findOne({
@@ -232,9 +232,8 @@ class Users {
           usertoken: token,
           message: 'Login Successful'
         });
-      } else {
-        res.status(401).json({ errors: { form: 'Invalid Credentials' } })
       }
+        res.status(401).json({ errors: { form: 'Invalid Credentials' } });
     });
   }
   /**

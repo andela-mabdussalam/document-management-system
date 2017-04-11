@@ -1,4 +1,4 @@
-'use strict';
+/* eslint-disable */
 const faker = require('faker');
 const bcrypt = require('bcrypt-nodejs');
 
