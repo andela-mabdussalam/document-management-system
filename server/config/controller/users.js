@@ -52,7 +52,7 @@ class Users {
    * Validate the signup form
    *
    * @param {object} data - contains the data to be validated
-   * @param {function} otnerValidations-  functiona that validates
+   * @param {function} otherValidations-  functiona that validates
    * @returns {object} The result of validation.
    *
    */
