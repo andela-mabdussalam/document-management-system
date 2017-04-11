@@ -34,7 +34,6 @@ const authentication = {
  * @returns {object} http callback.
  */
   isAdmin(req, res, done) {
-    console.log('789834759843754389753489574389574385943');
     if (req.token.userRoleId !== 1) {
       return res.status(401).send({ message: 'Only admins allowed' });
     }

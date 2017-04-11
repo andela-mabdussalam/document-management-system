@@ -252,7 +252,6 @@ class Users {
   * @returns {Object} - Returns response object
   */
   static getUser(req, res) {
-    console.log('0000000--------------------00000000');
     const userId = req.params.id;
     db.Users.findById(userId).then((user) => {
       if (!user) {

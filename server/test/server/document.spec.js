@@ -151,7 +151,6 @@ describe('DOCUMENT API', function () {
         server.get(`/api/documents/1`)
           .set('authorization', adminToken)
           .end((error, response) => {
-            console.log('the res is -----------------', response.body);
             expect(response.status).to.equal(200);
             done();
           });
@@ -279,7 +278,6 @@ describe('DOCUMENT API', function () {
           for (let index = 0; index < documents.length - 2; index += 1) {
             check = compareDate(documents[index].createdAt,
               documents[index + 1].createdAt);
-              console.log('---------------', check);
             if (!check) break;
           }
           expect(check).to.be.true;
@@ -305,7 +303,6 @@ describe('DOCUMENT API', function () {
       server.post(`/api/documents/search?query=${query}`)
         .set('authorization', privateToken)
         .end((error, response) => {
-          console.log('response is', response.body.result[0]);
           expect(response.status).to.equal(200);
           expect(matcher.test(response.body.result[0].content)).to.be.true;
           response.body.result
