@@ -1,7 +1,6 @@
 /* eslint import/no-unresolved: 0 */
 import DB from '../../models/';
 
-
 const documents = {
   /**
    * Create a new document
