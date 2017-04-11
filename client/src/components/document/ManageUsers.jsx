@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
-import { getAllUsers, editUser, deleteUser, createUser } from '../../actions/getUsers';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { GridList, GridTile } from 'material-ui/GridList';
@@ -13,6 +13,10 @@ import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import { getAllUsers, editUser, deleteUser, createUser }
+from '../../actions/getUsers';
+
+
 const style = {
   height: 60,
   width: '100%',
@@ -60,33 +64,33 @@ class ManageUsers extends React.Component {
       .then((response) => {
         const count = response.users.pop();
         this.setState({ users: this.props.users, total: count.count });
-        let elements = this.state.users;
+        const elements = this.state.users;
       }, (error) => {
-        // console.log("Mariam Error", error.response.data.message)
       });
   }
   handleOpen(selectedUser) {
     this.setState({ open: true, selectedUser });
+  }
 
-  };
   handleOpenCreate(selectedUser) {
     this.setState({ openCreateDialog: true });
-
-  };
+  }
 
   handleClose() {
     this.setState({ open: false });
-  };
+  }
+
   handleCreateClose() {
     this.setState({ openCreateDialog: false });
-  };
+  }
+
   handlePageChange(pageNumber) {
     const offset = (pageNumber - 1) * this.state.limit;
     this.setState({
       page: pageNumber,
-      offset: offset
+      offset
     });
-    setTimeout(() => { this.getAll() }, 10);
+    setTimeout(() => { this.getAll(); }, 10);
   }
   updateUser() {
     const { selectedUser, newUser } = this.state;
@@ -96,29 +100,26 @@ class ManageUsers extends React.Component {
           newUser: {}
         }));
       }, (error) => {
-        // console.log("Mariam Error", error.response.data.message)
       });
     this.setState({ open: false });
-
-  };
+  }
   createUser() {
     this.createDialog();
   }
   deleteUser(selectedUser) {
-    console.log('selecteduser is', selectedUser.id);
     this.props.deleteUser(selectedUser);
   }
 
   onChange(e) {
     const newUser = this.state.newUser;
     newUser[e.target.name] = e.target.value;
-    this.setState(() => ({ newUser: newUser }));
-  };
-  componentDidMount() {
+    this.setState(() => ({ newUser }));
   }
+
   createDialog() {
     const actions = [
-      <FlatButton label="Cancel" primary={true} onTouchTap={this.handleCreateClose} />,
+      <FlatButton label="Cancel" primary={true}
+      onTouchTap={this.handleCreateClose} />,
       <FlatButton label="Submit" primary={true} keyboardFocused={true}
       />,
     ];
@@ -171,12 +172,13 @@ class ManageUsers extends React.Component {
           </div>
         </Dialog>
       </div>
-    )
+    );
   }
   editDialog() {
     const { userName, firstName, lastName, email } = this.state.selectedUser;
     const actions = [
-      <FlatButton label="Cancel" primary={true} onTouchTap={this.handleClose} />,
+      <FlatButton label="Cancel" primary={true}
+      onTouchTap={this.handleClose} />,
       <FlatButton label="Submit" primary={true} keyboardFocused={true}
         onTouchTap={this.updateUser}
       />,
@@ -234,7 +236,7 @@ class ManageUsers extends React.Component {
           </div>
         </Dialog>
       </div>
-    )
+    );
   }
 
   /**
@@ -257,26 +259,39 @@ class ManageUsers extends React.Component {
           />
         </div>
         <div style={{ width: '100%' }}>
-          <RaisedButton onTouchTap={() => this.handleOpenCreate()} style={{ marginLeft: '25px' }} fullWidth={true}><i className="material-icons">add</i> ADD NEW USER</RaisedButton>
+          <RaisedButton onTouchTap={() => this.handleOpenCreate()}
+            style={{ marginLeft: '25px' }}
+            fullWidth={true}><i className="material-icons">add</i>
+             ADD NEW USER</RaisedButton>
           {this.createDialog()}
         </div>
         {users.map((user, index) => (
 
           <Paper key={index} style={style} zDepth={5}>
-            <div className="addW" style={{ borderRight: '1px solid #b2beb5', marginTop: '5px' }}><p style={{ 'float': 'left' }}>{user.id}</p></div>
-            <div className="addW" style={{ borderRight: '1px solid #b2beb5', marginTop: '5px' }}><p style={{ 'float': 'left' }}>{user.userName}</p></div>
-            <div className="addW" style={{ borderRight: '1px solid #b2beb5', marginTop: '5px' }}><p style={{ 'float': 'left' }}>{user.firstName}</p></div>
-            <div className="addW" style={{ borderRight: '1px solid #b2beb5', marginTop: '5px' }}><p style={{ 'float': 'left' }}>{user.roleId}</p></div>
+            <div className="addW" style={{ borderRight: '1px solid #b2beb5',
+              marginTop: '5px' }}><p style={{ float: 'left' }}>{user.id}</p>
+            </div>
+            <div className="addW" style={{ borderRight: '1px solid #b2beb5',
+              marginTop: '5px' }}><p style={{ float: 'left' }}>{user.userName}
+               </p></div>
+            <div className="addW" style={{ borderRight: '1px solid #b2beb5',
+              marginTop: '5px' }}><p style={{ float: 'left' }}>{user.firstName}
+              </p></div>
+            <div className="addW" style={{ borderRight: '1px solid #b2beb5',
+              marginTop: '5px' }}><p style={{ float: 'left' }}>{user.roleId}
+              </p></div>
             <div style={{ marginTop: '15px' }}>
-              <FlatButton onTouchTap={() => this.handleOpen(user)}><i className="material-icons">create</i></FlatButton>
-              <FlatButton onTouchTap={() => this.deleteUser(user)}><i className="material-icons">delete</i></FlatButton>
+              <FlatButton onTouchTap={() => this.handleOpen(user)}>
+                <i className="material-icons">create</i></FlatButton>
+              <FlatButton onTouchTap={() => this.deleteUser(user)}>
+                <i className="material-icons">delete</i></FlatButton>
             </div>
           </Paper>
         ))}
         {this.editDialog()}
 
       </div>
-    )
+    );
   }
 }
 
@@ -284,9 +299,9 @@ class ManageUsers extends React.Component {
 const storeToProps = (state) => {
   return {
     users: state.users
-  }
-}
+  };
+};
 
 
-
-export default connect(storeToProps, { getAllUsers, editUser, deleteUser, createUser })(ManageUsers);
+export default connect(storeToProps,
+{ getAllUsers, editUser, deleteUser, createUser })(ManageUsers);

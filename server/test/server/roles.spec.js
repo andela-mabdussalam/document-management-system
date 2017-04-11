@@ -4,12 +4,12 @@ import testserver from '../../config/bin/testServer';
 import helper from '../helper';
 import DB from '../../models/';
 
-describe('ROLE API', () => {
-  const admin = helper.adminRole();
+describe('ROLE API', function () {
+  this.timeout(20000);
   const userDetail = helper.testUser();
   const anotherUser = helper.createUser();
   const regularRoleParams = helper.regularRole();
-  let adminToken, role, adminId, newUserId, userToken;
+  let adminToken, adminId, newUserId, userToken, role;
 
   before((done) => {
     DB.sequelize.sync({ force: true }).then(() => {
@@ -34,16 +34,13 @@ describe('ROLE API', () => {
       .then((regularRole) => {
         role = regularRole;
         done();
-      }).catch((err) => {
-        console.log('error', err);
       });
   });
 
-  // afterEach(() => DB.Roles.destroy({ where: { id: role.id } }));
 
-  after(() => {
-    DB.sequelize.sync({ force: true });
-  });
+  // after(() => {
+  //   DB.sequelize.sync({ force: true });
+  // });
 
   describe('ADMIN ', () => {
     it('should be able to create a New Role', (done) => {
@@ -73,7 +70,6 @@ describe('ROLE API', () => {
         .set('authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          console.log('error is');
           done();
         });
     });
@@ -85,7 +81,6 @@ describe('ROLE API', () => {
         .set('authorization', adminToken)
         .end((err, res) => {
           returnedArray = res.body;
-          console.log('returned array-------------------------', returnedArray);
           returnedArray.forEach((item) => {
             if (item.title === 'admin') {
               test = true;
@@ -115,7 +110,6 @@ describe('ROLE API', () => {
         .send({ title: 'admin' })
         .set('authorization', adminToken)
         .end((err, res) => {
-          console.log('res is', res);
           expect(res.status).to.equal(409);
           expect(res.body.message).to.equal('Role already exists');
           done();
@@ -193,13 +187,11 @@ describe('ROLE API', () => {
     });
   });
   describe('USERS', () => {
-    console.log('uesr', anotherUser);
     before((done) => {
       supertest(testserver)
         .post('/api/users/signup')
         .send(anotherUser)
         .end((err, res) => {
-          console.log('response', res.error);
           userToken = res.body.token;
           expect(res.status).to.equal(201);
           done();
@@ -207,7 +199,6 @@ describe('ROLE API', () => {
     });
 
     it('Should not be able to create new role', (done) => {
-      console.log(userToken);
       supertest(testserver)
         .post('/api/roles')
         .set('authorization', userToken)
@@ -250,6 +241,5 @@ describe('ROLE API', () => {
           done();
         });
     });
-
   });
 });

@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
-// import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from '../../../../server/shared/validations/login';
 import { login } from '../../actions/authActions';
 import { Card, CardText } from 'material-ui/Card';
@@ -101,7 +100,7 @@ class LoginForm extends React.Component {
           type="password"
         />
     </div>
-    <RaisedButton disabled={ isLoading} type="submit" label="Create New Account" name="action" primary />
+    <RaisedButton disabled={ isLoading} type="submit" label="Log In" name="action" primary />
       </form>
     </Card>
     )

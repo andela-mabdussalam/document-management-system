@@ -1,4 +1,4 @@
-import bycrypt from 'bcrypt-nodejs';
+const bycrypt = require('bcrypt-nodejs');
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {

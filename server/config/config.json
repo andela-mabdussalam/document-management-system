@@ -1,7 +1,7 @@
 {
   "development": {
     "username":"mariamabdussalam",
-    "database": "doc-mgt",
+    "database": "doc-mgt-test",
     "password":"",
     "host": "127.0.0.1",
     "dialect": "postgres"
@@ -9,7 +9,7 @@
   "test": {
     "username": "postgres",
     "password": "",
-    "database": "doc_mgt_test",
+    "database": "doc-mgt-test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
@@ -18,6 +18,7 @@
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "use_env_variable": "DATABASE_URL"
   }
 }

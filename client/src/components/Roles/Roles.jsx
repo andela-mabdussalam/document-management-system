@@ -54,7 +54,6 @@ class Roles extends React.Component {
   };
   create(role) {
     const {title} = this.state;
-    console.log('the role is', title);
     this.props.createRole(title).then(()=>{});
     this.setState({open: false});
   }

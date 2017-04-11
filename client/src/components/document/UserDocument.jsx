@@ -1,5 +1,4 @@
 import React from 'react';
-// import { UserDocument } from '../../actions/publicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,7 +15,7 @@ import FontIcon from 'material-ui/FontIcon';
 import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import TextField from 'material-ui/TextField';
-import { getUserDocument } from '../../actions/publicDocs';
+import { getUserDocument } from '../../actions/getPublicDocs';
 
 
 const styles = {
@@ -69,26 +68,25 @@ class UserDocument extends React.Component {
   getDocs(actionToCall, params, set) {
     actionToCall(this.props.userId)
       .then((response) => {
-        console.log('this happens');
-        if (set) {
-          this.setState({ search: "" });
-        }
-        const count = 12;
+        // if (set) {
+        //   this.setState({ search: "" });
+        // }
+        // const count = 12;
 
-        this.setState({ documents: response.documents, total: count.count });
-        let elements = response.documents;
-        const arrayr = [];
-        elements.forEach((element) => {
-          const obj = {
-            "img": './images/grid-list/bg1.jpg',
-            "title": element.title,
-            "author": element.User.userName,
-            "content": element.content,
-            "id": element.id
-          };
-          arrayr.push(obj);
-        });
-        this.setState({ tileData: arrayr });
+        // this.setState({ documents: response.documents, total: count.count });
+        // let elements = response.documents;
+        // const arrayr = [];
+        // elements.forEach((element) => {
+        //   const obj = {
+        //     "img": './images/grid-list/bg1.jpg',
+        //     "title": element.title,
+        //     "author": element.User.userName,
+        //     "content": element.content,
+        //     "id": element.id
+        //   };
+        //   arrayr.push(obj);
+        // });
+        // this.setState({ tileData: arrayr });
       }, (error) => {
       });
   }

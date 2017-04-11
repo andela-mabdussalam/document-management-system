@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPublicDocs, viewDoc } from '../../actions/publicDocs';
+import { getPublicDocs, viewDoc } from '../../actions/getPublicDocs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -47,7 +47,6 @@ class ViewDoc extends React.Component {
   render() {
 
       const { document } = this.state;
-      console.log('the document is', document);
       return(
         <div>
         <Card className="docPlaceholder">

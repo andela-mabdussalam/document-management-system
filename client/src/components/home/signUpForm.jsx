@@ -13,7 +13,6 @@ const SignUpForm = ({
   errors,
   user,
   isLoading,
-  addFlashMessage,
   invalid
 }) => (
   <Card className="container">

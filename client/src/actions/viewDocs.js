@@ -9,11 +9,9 @@ export function getPublicDocuments(documents) {
 }
 
 export function getPublicDocs() {
-  console.log("I got here");
   return dispatch => {
     return axios.get('/api/documents/:id')
     .then((documents) => {
-      console.log('documents', documents);
       return dispatch(getPublicDocuments(documents));
     });
   }

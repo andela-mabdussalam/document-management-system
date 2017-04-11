@@ -1,1 +1,4 @@
 server/models/index.js
+server/test/
+server/seeders/
+client/test

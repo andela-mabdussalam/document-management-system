@@ -1,18 +1,6 @@
 /* eslint import/no-unresolved: 0 */
 import DB from '../../models/';
 
-const docAttributes = (doc) => {
-  const attributes = {
-    id: doc.id,
-    title: doc.title,
-    content: doc.content,
-    ownerId: doc.ownerId,
-    access: doc.access,
-  };
-
-  return attributes;
-};
-
 const documents = {
   /**
    * Create a new document
@@ -30,7 +18,7 @@ const documents = {
         title: newDocument.title,
         content: newDocument.content,
         access: newDocument.access,
-        ownerId: newDocument.ownerId
+        ownerId: req.token.userId
       }
     })
       .spread((document, created) => {
@@ -38,61 +26,15 @@ const documents = {
           return res.status(400)
             .send({ message: 'A Document with that Title already exists' });
         }
+        document.dataValues.User = req.token;
         return res.status(201)
           .send({
             document,
             message: 'Document successfully created!'
           });
-      }).catch(error => res.status(400).json(error.errors));
-  },
-  /**
-* Gets Public Documents
-* @param {Object} req Request object
-* @param {Object} res Response object
-* @returns {Object} - Returns response object
-*/
-  getAlldocs(req, res) {
-    console.log(" getting all Documenst");
-    if (req.query.limit < 0 || req.query.offset < 0) {
-      return res.status(400)
-        .send({ message: 'Enater a positive value for limit' });
-    }
-    const query = {
-      where: {
-        $or: [
-          { access: 'public' },
-          { ownerId: req.token.userId }
-        ]
-      },
-      limit: req.query.limit || null,
-      offset: req.query.offset || null,
-      order: [['createdAt', 'DESC']]
-    };
-    if (role && role.title === 'admin') {
-      DB.Documents.findAll({
-        attributes: ['id', 'title', 'content', 'access', 'createdAt', 'updatedAt']
-      }).then((result) => {
-        if (result < 1) {
-          return res.status(404).json({ message: 'No Document found' });
-        }
-        return res.status(200).json({ result, message: userId });
+      }).catch((error) => {
+        res.status(400).json(error.errors);
       });
-    } else {
-      DB.Documents.findAll({
-        where: {
-          $or: [{
-            access: 'public',
-          }, {
-            ownerId: userId
-          }]
-        }
-      }).then((results) => {
-        if (results < 1) {
-          return res.status(404).json({ message: 'No document found' });
-        }
-        return res.status(200).json(results);
-      });
-    }
   },
   /**
   * Gets all Documents
@@ -103,17 +45,15 @@ const documents = {
   getAll(req, res) {
     const userId = req.token.userId;
     const roleId = req.token.userRoleId;
-    console.log(req.token, " toooooooooooookkkkkkkkeeenennnenenen");
     if (req.query.limit < 0 || req.query.offset < 0) {
       return res.status(400)
         .send({ message: 'Enter a positive value for limit' });
     }
     DB.Roles.findById(roleId).then((role) => {
-      console.log(role, " Rollinginginginginig");
       if (role && role.title === 'admin') {
-        console.log("8=((88*****************************************))");
         DB.Documents.findAndCountAll({
-          attributes: ['id', 'title', 'content', 'access', 'createdAt', 'updatedAt'],
+          attributes: ['id', 'title', 'content',
+            'access', 'createdAt', 'updatedAt'],
           limit: req.query.limit || null,
           offset: req.query.offset || null,
           order: [['id', 'ASC']],
@@ -126,10 +66,11 @@ const documents = {
             return res.status(404).json({ message: 'No Document found' });
           }
 
-          return res.status(200).json({ result: [...result.rows, {count: result.count}], message: userId });
+          return res.status(200).json({ result: [...result.rows,
+             { count: result.count }],
+            message: userId });
         });
       } else {
-        console.log("8=((88*****************************************))222222222222");
         DB.Documents.findAndCountAll({
           where: {
             $or: [{
@@ -145,13 +86,13 @@ const documents = {
           limit: req.query.limit || null,
           offset: req.query.offset || null,
           order: [['createdAt', 'DESC']]
-        }).then((results) => {
-
-          if (results < 1) {
+        }).then((result) => {
+          if (result < 1) {
             return res.status(404).json({ message: 'No document found' });
           }
-          console.log(results[0].User.userName, " Doc User");
-          return res.status(200).json({ result: [...result.rows, {count: result.count}], message: userId });
+          return res.status(200).json({ result: [...result.rows,
+             { count: result.count }],
+            message: userId });
         });
       }
     });
@@ -164,11 +105,9 @@ const documents = {
   * @returns {Object} - Returns response object
   */
   getOne(req, res) {
-    console.log('token', req.token);
     const docId = req.params.id;
     const userId = req.token.userId;
-    const roleId = req.token.roleId;
-
+    const roleId = req.token.userRoleId;
     DB.Roles.findById(roleId).then((role) => {
       if (role && role.title === 'admin') {
         DB.Documents.findById(docId).then((result) => {
@@ -179,12 +118,12 @@ const documents = {
         });
       } else {
         DB.Documents.findById(docId).then((results) => {
-          console.log('yo gets');
           if (results < 1) {
             return res.status(404).json({ message: 'No document found' });
           }
-          if (results.dataValues.ownerId !== userId) {
-            return res.status(404).json({ message: 'You cannot access this document' });
+          if (results.dataValues.ownerId !== userId && roleId !== 1) {
+            return res.status(401)
+              .json({ message: 'You cannot access this document' });
           }
           return res.status(200).json(results);
         }).catch(() => {
@@ -203,12 +142,14 @@ const documents = {
   * @returns {Object} - Returns response object
   */
   update(req, res) {
-    console.log('getting to the update statement---------------');
     const docId = req.params.id;
-    const userId = req.token.userId;
     DB.Documents.findById(docId).then((results) => {
       if (results < 1) {
         return res.status(404).json({ message: 'No document found' });
+      }
+      if (req.token.userId !== results.dataValues.ownerId) {
+        return res.status(404)
+        .json({ message: 'You cannot edit this document' });
       }
       results.update(req.body).then((updatedResult) => {
         return res.status(200)
@@ -229,7 +170,6 @@ const documents = {
   */
   remove(req, res) {
     const docId = req.params.id;
-    // const userId = req.token.userId;
     DB.Documents.destroy({
       where: {
         id: docId
@@ -249,15 +189,14 @@ const documents = {
   * @param {Object} res Response object
   * @returns {Object} - Returns response object
   */
-  getDocsForUser(req, res){
-    console.log('i get here ---------------------------- ');
+  getDocsForUser(req, res) {
     DB.Documents.findAll({
-         where: { ownerId: req.params.id},
-         include: [{
-              model: DB.Users,
-              attributes: ['userName']
-            }]
-          }).then((results) => {
+      where: { ownerId: req.params.id },
+      include: [{
+        model: DB.Users,
+        attributes: ['userName']
+      }]
+    }).then((results) => {
       if (!results) {
         return res.status(404)
           .send({
@@ -265,13 +204,11 @@ const documents = {
             ${request.params.id}`
           });
       }
-      return res.status(200).json({ result: results});
+      return res.status(200).json({ result: results });
     });
-
   },
 
   search(request, response) {
-    console.log('gets here');
     if (request.query.limit < 0 || request.query.offset < 0) {
       return response.status(400)
         .send({ message: 'Only Positive integers are permitted.' });
@@ -311,7 +248,7 @@ const documents = {
         if (!result) {
           return res.status(404).json({ message: 'No documents found' });
         }
-        response.json({result: [...result.rows, {count: result.count}]});
+        response.json({ result: [...result.rows, { count: result.count }] });
       });
   }
 };

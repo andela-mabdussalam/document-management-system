@@ -4,7 +4,6 @@ import path from 'path';
 export default {
   debug: true,
   devtool: 'inline-source-map',
-  noInfo: false,
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
@@ -13,7 +12,7 @@ export default {
   target: 'web',
   output: {
     path: __dirname + '/dist', // Note: Physical files are only output by the production build task `npm run build`.
-    publicPath: '/',
+    publicPath: '/public/',
     filename: 'bundle.js'
   },
   devServer: {
@@ -21,9 +20,7 @@ export default {
     contentBase: path.resolve(__dirname, 'client/src')
   },
   resolve: {
-    alias: {
-      jquery: path.resolve(__dirname, 'node_modules/jquery/dist/jquery.js')
-    }
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -38,11 +35,12 @@ export default {
   module: {
     loaders: [
       {
-        test: /\.js$/, include:
-          [
-            path.join(__dirname, 'client/src'),
-            path.join(__dirname, 'server/shared'),
-          ]
+        test: /\.jsx?$/,
+        include:
+        [
+          path.join(__dirname, 'client/src'),
+          path.join(__dirname, 'server/shared'),
+        ]
         , loaders: ['babel']
       },
 
@@ -65,7 +63,10 @@ export default {
         loader: "url?limit=10000&mimetype=application/font-woff"
       },
       { test: /\.(jpg|png|svg)$/, loader: 'url-loader', options: { limit: 25000, }, }
-    ]
+    ],
+    query: {
+      presets: ['react', 'es2015', 'stage-0'],
+    },
   },
   node: {
     net: 'empty',

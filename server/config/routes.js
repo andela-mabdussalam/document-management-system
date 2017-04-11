@@ -10,7 +10,7 @@ const routes = (router, authenticate) => {
 
   // Route to logout user
   router.post('/users/logout', users.logOut);
-  router.get('/users/:identifier', users.identifier);
+  router.get('/users/get/:identifier', users.identifier);
 
   // Route to get all users
   router.get('/users', authenticate.verifyToken, authenticate.isAdmin, users.findAll);
@@ -38,7 +38,7 @@ const routes = (router, authenticate) => {
   router.route('/documents/:id')
     .get(authenticate.verifyToken, document.getOne)
     .put(authenticate.verifyToken, document.update)
-    .delete(authenticate.verifyToken, document.remove);
+    .delete(authenticate.verifyToken, authenticate.isAdmin, document.remove);
 
   router.route('/documents/search')
      .post(authenticate.verifyToken, document.search);

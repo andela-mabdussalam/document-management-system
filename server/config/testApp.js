@@ -28,13 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', router);
 app.get('*', (req, res) => {
-  console.log('hello');
 });
-// Setup a default catch-all route that sends back a welcome message in JSON format.
-// app.get('/', (req, res) => res.status(200).send({
-//   message: 'Welcome to the beginning of nothingness.',
-// }));
-// app.get('/users', users.findAll);
 routes(router, authenticate);
 
 module.exports = app;
