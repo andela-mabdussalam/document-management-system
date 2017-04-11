@@ -21,15 +21,6 @@ const authentication = {
       if (err) {
         return res.status(401).send({ message: 'You have an Invalid Token' });
       }
-
-      if (token.userId !== 1 && req.params.id !== undefined) {
-
-
-        // Removed it because of the fronten
-        // if (req.params.id !== token.userId.toString()) {
-        //   return res.status(401).send({ message: 'User not authorized' });
-        // }
-      }
       req.token = token;
       done();
     });

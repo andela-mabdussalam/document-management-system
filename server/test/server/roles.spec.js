@@ -4,12 +4,12 @@ import testserver from '../../config/bin/testServer';
 import helper from '../helper';
 import DB from '../../models/';
 
-describe('ROLE API', () => {
-  const admin = helper.adminRole();
+describe('ROLE API', function() {
+  this.timeout(30000);
   const userDetail = helper.testUser();
   const anotherUser = helper.createUser();
   const regularRoleParams = helper.regularRole();
-  let adminToken, role, adminId, newUserId, userToken;
+  let adminToken, adminId, newUserId, userToken;
 
   before((done) => {
     DB.sequelize.sync({ force: true }).then(() => {
@@ -34,12 +34,10 @@ describe('ROLE API', () => {
       .then((regularRole) => {
         role = regularRole;
         done();
-      }).catch((err) => {
-        console.log('error', err);
+      }).catch(() => {
       });
   });
 
-  // afterEach(() => DB.Roles.destroy({ where: { id: role.id } }));
 
   after(() => {
     DB.sequelize.sync({ force: true });
@@ -73,7 +71,6 @@ describe('ROLE API', () => {
         .set('authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          console.log('error is');
           done();
         });
     });
@@ -85,7 +82,6 @@ describe('ROLE API', () => {
         .set('authorization', adminToken)
         .end((err, res) => {
           returnedArray = res.body;
-          console.log('returned array-------------------------', returnedArray);
           returnedArray.forEach((item) => {
             if (item.title === 'admin') {
               test = true;
@@ -115,7 +111,6 @@ describe('ROLE API', () => {
         .send({ title: 'admin' })
         .set('authorization', adminToken)
         .end((err, res) => {
-          console.log('res is', res);
           expect(res.status).to.equal(409);
           expect(res.body.message).to.equal('Role already exists');
           done();

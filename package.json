@@ -10,7 +10,7 @@
     "tdd": "npm run test:frontend -- --watch",
     "start": "npm run start:dev",
     "start:dev": "./node_modules/.bin/babel-node ./server/config/bin/server.js ",
-    "test": "babel-node node_modules/babel-istanbul/lib/cli cover _mocha --  --recursive ./server/test -R spec",
+    "test": "babel-node node_modules/babel-istanbul/lib/cli cover _mocha --  --recursive ./server/test/**/*.spec.js -R spec",
     "clean-dist": "npm run remove-dist && mkdir dist",
     "remove-dist": "node_modules/.bin/rimraf ./dist",
     "build:html": "babel-node server/config/bin/buildHtml",

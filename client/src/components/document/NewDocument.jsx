@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPublicDocs, viewDoc, updateDocument } from '../../actions/publicDocs';
+import { Document, viewDoc, updateDocument } from '../../actions/publicDocs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';

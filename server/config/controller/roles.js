@@ -13,14 +13,11 @@ const roles = {
         title: req.body.title
       }
     }).then((returnedRole) => {
-      console.log('returned role');
       if (returnedRole) {
-        console.log('gets here');
         return res.status(409).json({
           message: `Role already exists`
         });
       }
-      console.log('gets there');
       DB.Roles.create({ title: req.body.title }).then((role) => {
         return res.status(201).json(role);
       }).catch(error => res.status(400).json(error));
@@ -52,7 +49,6 @@ const roles = {
    * @returns {object} all roles.
    */
   getAllRoles(req, res) {
-    console.log('gets right here');
     DB.Roles.findAll().then((roleReturned) => {
       if (!roleReturned) {
         return res.status(404).send({ message: 'No role found' });
@@ -90,10 +86,8 @@ const roles = {
    * @return {Object} response object
    */
   deleteRole(request, response) {
-    console.log('debo');
     DB.Roles.findById(request.params.id)
       .then((role) => {
-        console.log('debo');
         if (!role) {
           return response.status(404)
             .send({ message: `Ǹo role with id: ${request.params.role}` });

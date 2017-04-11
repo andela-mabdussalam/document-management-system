@@ -23,7 +23,7 @@ const routes = (router, authenticate) => {
 
   // Route to create a role
   router.route('/roles')
-    .post(authenticate.verifyToken, authenticate.isAdmin, roles.create)
+    .post(roles.create)
     .get(authenticate.verifyToken, authenticate.isAdmin, roles.getAllRoles);
 
   router.route('/roles/:id')
@@ -38,7 +38,7 @@ const routes = (router, authenticate) => {
   router.route('/documents/:id')
     .get(authenticate.verifyToken, document.getOne)
     .put(authenticate.verifyToken, document.update)
-    .delete(authenticate.verifyToken, document.remove);
+    .delete(authenticate.verifyToken, authenticate.isAdmin, document.remove);
 
   router.route('/documents/search')
      .post(authenticate.verifyToken, document.search);

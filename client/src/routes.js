@@ -6,9 +6,11 @@ import LandingPage from './components/landing/LandingPage';
 import LoginPage from './components/home/loginPage';
 import SignUpPage from './components/home/signUpPage';
 import TabsExampleSimple from './components/document/Dashboard';
+import { IndexRoute } from 'react-router';
 export default (
   <div>
-    <Route exact path="/" component={App} />
+    <IndexRoute component={SignUpPage} />
+    <Route exact path="/" component={SignUpPage} />
     <Route path="login" component={LoginPage} />
   </div>
 );
