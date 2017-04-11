@@ -10,15 +10,18 @@ const server = supertest(createdServer);
 
 describe('USER API', function () {
   this.timeout(30000);
-  let badRole, adminsToken, userToken, userId, secondUsertoken;
+  let badRole, adminsToken, userToken, userId, secondUsertoken, secondUserId;
   const newAdmin = helper.createAdmin();
   const newUser = helper.createUser();
   const secondUser = helper.createUser();
 
   before((done) => {
+    DB.sequelize.sync({ force: true }).then(() => {
     DB.Roles.create({ title: 'admin' });
     DB.Roles.create({ title: 'regular' });
     done();
+    })
+
   });
   after(() => {
     DB.sequelize.sync({ force: true });
@@ -132,7 +135,7 @@ describe('USER API', function () {
         .get('/api/users')
         .set('authorization', userToken)
         .end((err, res) => {
-          expect(res.status).to.equal(401);
+          expect(res.body.message).to.equal('Only admins allowed');
           done();
         });
     });
@@ -153,30 +156,10 @@ describe('USER API', function () {
         .get('/api/users/034334')
         .set('authorization', adminsToken)
         .end((err, res) => {
-          expect(res.status).to.equal(401);
+          expect(res.status).to.equal(404);
           done();
         });
     });
-    it('should return an error if user is not logged in', (done) => {
-      server
-        .get(`/api/users/${userId}`)
-        .set('authorization', adminsToken)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-    });
-    it('should return an error if the user is not the logged in user',
-      (done) => {
-        server
-          .get(`/api/users/${userId}`)
-          .set('authorization', adminsToken)
-          .end((err, res) => {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('User not authorized');
-            done();
-          });
-      });
   });
   describe('update a user', () => {
     it('should update user details for a user', (done) => {
@@ -195,7 +178,7 @@ describe('USER API', function () {
         .set('authorization', userToken)
         .send({ userName: 'omalicha' })
         .end((err, res) => {
-          expect(res.status).to.equal(404);
+          expect(res.status).to.equal(401);
           done();
         });
     });

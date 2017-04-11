@@ -107,8 +107,7 @@ const documents = {
   getOne(req, res) {
     const docId = req.params.id;
     const userId = req.token.userId;
-    const roleId = req.token.roleId;
-
+    const roleId = req.token.userRoleId;
     DB.Roles.findById(roleId).then((role) => {
       if (role && role.title === 'admin') {
         DB.Documents.findById(docId).then((result) => {
@@ -122,8 +121,8 @@ const documents = {
           if (results < 1) {
             return res.status(404).json({ message: 'No document found' });
           }
-          if (results.dataValues.ownerId !== userId) {
-            return res.status(404)
+          if (results.dataValues.ownerId !== userId && roleId !== 1) {
+            return res.status(401)
               .json({ message: 'You cannot access this document' });
           }
           return res.status(200).json(results);
@@ -213,10 +212,6 @@ const documents = {
     if (request.query.limit < 0 || request.query.offset < 0) {
       return response.status(400)
         .send({ message: 'Only Positive integers are permitted.' });
-    }
-    if (isNaN(request.query.limit) || isNaN(request.query.offset)) {
-      return response.status(400)
-        .send({ message: 'Invalid query or offset' });
     }
     const queryString = request.query.query;
     const publishedDate = request.query.publishedDate;

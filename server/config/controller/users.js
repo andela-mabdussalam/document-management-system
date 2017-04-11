@@ -252,6 +252,7 @@ class Users {
   * @returns {Object} - Returns response object
   */
   static getUser(req, res) {
+    console.log('0000000--------------------00000000');
     const userId = req.params.id;
     db.Users.findById(userId).then((user) => {
       if (!user) {
@@ -270,6 +271,9 @@ class Users {
   static updateUser(req, res) {
     const userId = req.params.id;
     let updatedUser;
+    if (Number(userId) !== req.token.userId && req.token.userRoleId !== 1) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     db.Users.findById(userId).then((user) => {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });

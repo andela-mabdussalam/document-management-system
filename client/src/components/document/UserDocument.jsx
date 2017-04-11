@@ -1,5 +1,4 @@
 import React from 'react';
-// import { UserDocument } from '../../actions/publicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,7 +15,7 @@ import FontIcon from 'material-ui/FontIcon';
 import { blue500, red500, greenA200 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import TextField from 'material-ui/TextField';
-import { getUserDocument } from '../../actions/publicDocs';
+import { getUserDocument } from '../../actions/getPublicDocs';
 
 
 const styles = {

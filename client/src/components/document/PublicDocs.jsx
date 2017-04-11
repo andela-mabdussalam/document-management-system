@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPublicDocs, searchDocument, deleteDocument } from '../../actions/publicDocs';
+import { getPublicDocs, searchDocument, deleteDocument } from '../../actions/getPublicDocs';
 import * as ReactRouter from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';

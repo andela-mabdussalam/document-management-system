@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateDocument } from '../../actions/publicDocs';
+import { updateDocument, createNewDoc } from '../../actions/getPublicDocs';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { createNewDoc } from '../../actions/publicDocs';
 import 'froala-editor/js/froala_editor.pkgd.min';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';

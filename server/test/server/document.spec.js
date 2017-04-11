@@ -151,6 +151,7 @@ describe('DOCUMENT API', function () {
         server.get(`/api/documents/1`)
           .set('authorization', adminToken)
           .end((error, response) => {
+            console.log('the res is -----------------', response.body);
             expect(response.status).to.equal(200);
             done();
           });
@@ -170,7 +171,7 @@ describe('DOCUMENT API', function () {
           .set('authorization', privateToken2)
           .end((error, response) => {
             expect(response.status).to.equal(401);
-            expect(response.body.message).to.equal('User not authorized');
+            expect(response.body.message).to.equal('You cannot access this document');
             done();
           });
       });
@@ -272,11 +273,13 @@ describe('DOCUMENT API', function () {
       server.get('/api/documents?limit=3')
         .set('authorization', privateToken)
         .end((error, response) => {
-          const documents = response.body;
+          const documents = response.body.result;
+          const count = response.body.result.pop();
           let check = false;
-          for (let index = 0; index < documents.length - 1; index += 1) {
+          for (let index = 0; index < documents.length - 2; index += 1) {
             check = compareDate(documents[index].createdAt,
               documents[index + 1].createdAt);
+              console.log('---------------', check);
             if (!check) break;
           }
           expect(check).to.be.true;
@@ -302,8 +305,10 @@ describe('DOCUMENT API', function () {
       server.post(`/api/documents/search?query=${query}`)
         .set('authorization', privateToken)
         .end((error, response) => {
+          console.log('response is', response.body.result[0]);
           expect(response.status).to.equal(200);
-          expect(matcher.test(response.body[0].content)).to.be.true;
+          expect(matcher.test(response.body.result[0].content)).to.be.true;
+          response.body.result
           done();
         });
     });
@@ -315,7 +320,7 @@ describe('DOCUMENT API', function () {
           .set('authorization', privateToken)
           .end((error, response) => {
             expect(response.status).to.equal(200);
-            expect(response.body.length).to.equal(4);
+            expect(response.body.result.length).to.equal(5);
             done();
           });
       });
@@ -329,8 +334,8 @@ describe('DOCUMENT API', function () {
           .set('authorization', privateToken)
           .end((error, response) => {
             expect(response.status).to.equal(200);
-            expect(response.body.length).to.equal(4);
-            expect(match.test(response.body[0].content)).to.be.true;
+            expect(response.body.result.length).to.equal(5);
+            expect(match.test(response.body.result[0].content)).to.be.true;
             done();
           });
       });
@@ -339,7 +344,7 @@ describe('DOCUMENT API', function () {
         .set('authorization', privateToken)
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          expect(response.body.length).to.equal(2);
+          expect(response.body.result.length).to.equal(3);
           done();
         });
     });

@@ -5,11 +5,11 @@ import helper from '../helper';
 import DB from '../../models/';
 
 describe('ROLE API', function () {
-  this.timeout(30000);
+  this.timeout(20000);
   const userDetail = helper.testUser();
   const anotherUser = helper.createUser();
   const regularRoleParams = helper.regularRole();
-  let adminToken, adminId, newUserId, userToken;
+  let adminToken, adminId, newUserId, userToken, role;
 
   before((done) => {
     DB.sequelize.sync({ force: true }).then(() => {
@@ -34,14 +34,13 @@ describe('ROLE API', function () {
       .then((regularRole) => {
         role = regularRole;
         done();
-      }).catch(() => {
       });
   });
 
 
-  after(() => {
-    DB.sequelize.sync({ force: true });
-  });
+  // after(() => {
+  //   DB.sequelize.sync({ force: true });
+  // });
 
   describe('ADMIN ', () => {
     it('should be able to create a New Role', (done) => {
